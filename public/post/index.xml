@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Jenny Listman</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on Jenny Listman</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 15 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</title>
+      <link>/post/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</link>
+      <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</guid>
+      <description>Interactive App To Visualize Women Runnning for State or Federal Offices This project was created with data scraped from the website of the Center for American Women in Politics at Rutgers University. The Center conducts research on women’s participation in politics in America and maintains a list of women who are or potentially will be running for US Congress and State offices.
+The code scrapes and combines data from their lists of women candidates, cleans and creates new variables, and visualizes the data in an interactive shiny map and searchable data table using plotly and DT packages .</description>
+    </item>
+    
+  </channel>
+</rss>

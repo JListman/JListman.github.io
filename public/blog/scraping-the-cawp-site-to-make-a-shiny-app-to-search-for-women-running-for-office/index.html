@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<link rel="stylesheet" href="/css/rainbow.css" rel="stylesheet" id="theme-stylesheet">
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Jenny Listman, PhD: Data Science Consulting for Small Businesses &amp; Nonprofits">
+
+<base href="/">
+<title>
+
+
+     Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office 
+
+</title>
+<link rel="canonical" href="/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/">
+
+
+
+
+
+
+<script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans">
+
+
+
+    <link rel="stylesheet" href="css/dark-style.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="img/fav.ico"
+
+>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="section" id="top">
+
+    <div class="container hero  fade-in one ">
+    <h1 class="bold-title is-1">Fun With R Coding</h1>
+    </div>
+
+
+<div class="section  fade-in two ">
+
+    <div class="container">
+    <hr>
+<nav class="nav nav-center">
+    <span id="nav-toggle" class="nav-toggle"  onclick="document.getElementById('nav-menu').classList.toggle('is-active');">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <div id="nav-menu" class="nav-left nav-menu">
+      <span class="nav-item">
+        <a href="/">Main</a>
+      </span>
+      <span class="nav-item">
+        <a href="/#about">About</a> 
+      </span>
+      <span class="nav-item">
+        <a href="/blog">Back to blog</a>
+      </span> 
+      <span class="nav-item">
+        <a href="/#contact">Contact</a>
+      </span>
+    
+      <span class="nav-item">
+        <a href="/index.xml"><i class="fa fa-rss"></i></a>
+      </span>
+    
+    </div>
+</nav>
+<hr>
+    </div>
+
+    <div class="container  fade-in two ">
+        <h2 class="title is-1 top-pad strong-post-title"><a href="/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/">Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</a></h2>
+            <div class="post-data">
+                Mar 15, 2018 |
+                11 minutes read
+            </div>
+
+            
+                <div class="blog-share">
+                Share this:
+                
+                <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Read%20Scraping%20The%20CAWP%20Site%20To%20Make%20a%20Shiny%20App%20To%20Search%20For%20Women%20Running%20For%20Office%20%2fblog%2fscraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+                </a>
+                
+                 
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%2fblog%2fscraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+                </a>
+                
+                
+                
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%2fblog%2fscraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office%2f"
+                onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+                </a>
+                
+                </div>
+            
+
+    </div>
+
+    <div class="container markdown  fade-in two  top-pad">
+        <div id="interactive-app-to-visualize-women-runnning-for-state-or-federal-offices" class="section level4">
+<h4>Interactive App To Visualize Women Runnning for State or Federal Offices</h4>
+<p>This project was created with data scraped from the website of the <a href="http://www.cawp.rutgers.edu">Center for American Women in Politics</a> at <a href="https://www.rutgers.edu">Rutgers University</a>. The Center conducts research on women’s participation in politics in America and maintains <a href="http://cawp.rutgers.edu/buzz-2018-potential-women-candidates-us-congress-and-statewide-elected-executive">a list</a> of women who are or potentially will be running for US Congress and State offices.</p>
+<p>The code scrapes and combines data from their lists of women candidates, cleans and creates new variables, and visualizes the data in an interactive <code>shiny</code> map and searchable data table using <code>plotly</code> and <code>DT</code> packages . <strong>The <a href="http://www.cawp.rutgers.edu">CAWP</a> states that their products or data are available for non-for-profit distribution as long as they are given credit (we are allowed to scrape their data table - thank you CAWP).</strong></p>
+<p>See the app in action <a href="https://jennylistman.shinyapps.io/WomenCandidates/">here</a>. Read a blog about it <a href="https://medium.com/@jblistman/an-app-to-search-for-women-running-for-office-in-2018-346f5a013ec9">here</a></p>
+<p>The design of the app was inspired by the <a href="https://gokhan.shinyapps.io/adavis/">adavis</a> app from Gokhan Ciflikli</p>
+<p>Load packages needed:</p>
+<pre class="r"><code>library(rvest)
+library(tidyverse)
+library(janitor)
+library(shiny)
+library(plotly)
+library(filesstrings)
+library(zoo)
+library(ggpubr)
+library(DT)</code></pre>
+<p>To turn the website into data:<br />
+1. Specify and read in the url for website with tables to be scraped.<br />
+2. Get HTML nodes with <code>rvest::html_nodes</code> and<br />
+3. parse table contents into dataframes with <code>rvest::html_table</code>.</p>
+<pre class="r"><code>url &lt;- &#39;http://cawp.rutgers.edu/buzz-2018-potential-women-candidates-us-congress-and-statewide-elected-executive&#39;
+
+webpage &lt;- read_html(url)
+
+candidate_tables &lt;- webpage %&gt;%
+        html_nodes(&quot;table&quot;) %&gt;%
+        html_table(fill = TRUE)</code></pre>
+<p>Viewing the tables we’ve got a list with 2 elements corresponding to 2 of the 3 tables on the website. Looking at the website, we can see that candidate_tables[[1]] corresponds to special elections and candidate_tables[[2]] corresponds to general elections. <em>This website has changed its format recently, so the number of tables has to be varified before updating app.</em></p>
+<pre class="r"><code>glimpse(candidate_tables[[1]])
+glimpse(candidate_tables[[2]])</code></pre>
+<p>The special elections and general elections dataframes are formatted differently, so must be made compatible before combining. Change Dist. variable from numeric in the special elections table to character to match the general elections table. Use <code>janitor::clean_names</code> to remove spaces and special characters from variable names.</p>
+<pre class="r"><code>special_elec &lt;- candidate_tables[[1]] %&gt;%
+        mutate(Dist. = as.character(Dist.)) %&gt;% 
+        mutate(Dist. = replace(Dist., Dist. == &quot;8&quot;, &quot;08&quot;)) %&gt;% 
+        clean_names() </code></pre>
+<p>Combine the special elections and general elections dataframes and then clean things up. First rename one variable that has different names in each of these dataframes.</p>
+<p>On the <a href="http://cawp.rutgers.edu/buzz-2018-potential-women-candidates-us-congress-and-statewide-elected-executive">CAWP website database</a>, state abbreviation appears once, one row above all entries for a given state. Spaces below it in that column are blank, until data for the next state appears. Use <code>zoo::na.locf</code> to replace blanks below a state abbreviation with the abbreviation above. In order for this function to work, the blanks first need to be changed to <code>NA</code>.</p>
+<p>Remove special characters such as * with <code>filesstrings::trim_anything</code> and remove all blank rows.</p>
+<p>Remove candidates who lost their Party’s Primary. This step was added in after Primaries began.</p>
+<pre class="r"><code>cols &lt;- c(1,2)
+
+elections &lt;- candidate_tables[[2]] %&gt;%
+        clean_names() %&gt;%
+        rename(seat_status = general_seat) %&gt;%
+        bind_rows(special_elec) %&gt;%
+        mutate(state = replace(state, state == &quot;&quot;, NA)) %&gt;%
+        transform(state = na.locf(state)) %&gt;%
+        subset(primary_date != &quot;Lost&quot;) %&gt;%
+        subset(office != &quot;&quot;) %&gt;% 
+        mutate(office = trim_anything(office, &quot;*&quot;, &quot;right&quot;)) %&gt;%
+        mutate_each_(funs(factor(.)),cols)</code></pre>
+<p>Rename offices from abbreviations to full names. Some are not self-explanatory in their current form (P.S.C). Some offices have more than one name/spelling/punctuation formatting (Comp, Comp., Comtr.) or have been misspelled (Govenor).</p>
+<p>These will have to be updated periodically as variants are introduced to the database. Every time the website is re-scraped, check the <code>levels</code> for the variable <code>elections$office</code> to identify additional misspellings or abbreviations that have been introduced and then add them to the next code block.</p>
+<pre class="r"><code>levels(elections$office)
+
+elections$office &lt;- fct_recode(elections$office,
+                   `Commissioner of Agriculture` = &quot;Agriculture&quot;, `Commissioner of Agriculture` = &quot;Comm. Agri.&quot;,
+                   `Attorney General` = &quot;At. Gen.&quot;,`Attorney General`= &quot;Atty. Gen.&quot;,
+                   `State Auditor` =  &quot;Auditor&quot;, 
+                   `State Auditor` = &quot;St. Aud.&quot;, `State Auditor` = &quot;St. Auditor&quot;,
+                   `Chief Financial Officer` = &quot;CFO&quot;,  
+                   Comptroller = &quot;Comp&quot;, Comptroller = &quot;Comp.&quot;, Comptroller = &quot;Comptr.&quot;,
+                   Governor = &quot;Govenor&quot;, Governor = &quot;Governor&quot;,
+                   `Insurance Commissioner` = &quot;Insurance Comm.&quot;, `Insurance Commissioner` = &quot;Ins. Comm.&quot;,
+                   `Labor Commissioner` = &quot;Labor Comm.&quot;,
+                   `Land Commissioner` = &quot;Land&quot;,`Land Commissioner` = &quot;Land Comm.&quot;,
+                   `Lieutenant Governor` = &quot;Lt. Gov.&quot;,
+                   `Public Service Commissioner` = &quot;P.S.Comm.&quot;,
+                   `Public Service Commissioner` = &quot;P.S.C.&quot;,
+                   `Railroad Commissioner` = &quot;Rail. Comm.&quot;,
+                   `Superintendent of Public Instruction` = &quot;S.P.I.&quot;, 
+                   `Superintendent of Public Instruction` = &quot;Sup.Pub.Instr.&quot;,
+                   `Secretary of State` = &quot;Sec. St.&quot;,
+                   `State Treasurer` = &quot;St. Treas.&quot;,
+                   `US Delegate` = &quot;U.S. Del&quot;, `US Delegate` = &quot;U.S. Del.&quot;,
+                   `US Congressional Representative` = &quot;U.S. Rep&quot;, `US Congressional Representative` = &quot;U.S. Rep.&quot;, `US Congressional Representative` = &quot;U.S Rep&quot;, `US Congressional Representative` = &quot;U S. Rep&quot;,`US Congressional Representative` = &quot;U.S Rep.&quot;,
+                   `US Congressional Senator` = &quot;U.S. Sen.&quot;)     </code></pre>
+<p>Candidate name and party affiliation are a single character variable. Separate these into two variables using <code>filestrings::str_elem</code> and <code>base::trimws</code>.</p>
+<p>Some candidates in Minnesota have party listed as DFL. According to <a href="https://en.wikipedia.org/wiki/Minnesota_Democratic–Farmer–Labor_Party">Wikipedia</a>: Minnesota Democratic–Farmer–Labor Party (DFL) is a social liberal political party in Minnesota affiliated with the Democratic Party. Recode these candidates as Democrats.</p>
+<p>Territories that elect US Delegates and states with a small population that have one Federal Representative are listed as having district <code>AL</code>, to mean At-Large. Change district <code>AL</code> to <code>At-Large</code>. State-level offices have blanks for district variable. Change these to <code>State</code>.</p>
+<pre class="r"><code>elections &lt;- elections %&gt;%
+        mutate(party = str_elem(candidate_name_party, -2)) %&gt;%
+        mutate(party = replace(party, party == &quot;L&quot;, &quot;D&quot;)) %&gt;% 
+        mutate(party = as.factor(party)) %&gt;%
+        mutate(candidate = trimws(str_before_first(candidate_name_party,&quot;\\(&quot;), which = &quot;both&quot;)) %&gt;%
+        mutate(candidate = gsub(&quot;(^\\s+)|(\\s+$)&quot;, &quot;&quot;, candidate)) %&gt;%
+        mutate(dist = replace(dist, dist == &quot;&quot;, &quot;State&quot;)) %&gt;% 
+        mutate(dist = replace(dist, dist == &quot;AL&quot;, &quot;At-Large&quot;)) %&gt;%
+        mutate(dist = as.factor(dist)) %&gt;%
+        droplevels()</code></pre>
+<p>Make new variables for mapping and other possible visualizations: # of women running in each state, # and % running as Republican, # and % running as Democrat, # running for a given office.</p>
+<p>Some states or territories have no women running at this time. Combine dataframe with a list of all state names and abbreviations to add missing states as rows with values <code>NA</code>. Remove states with no state abbreviation, since those are territories that won’t show up on the <code>statebins</code> - style map. Capitalize variable names that will be included in the <code>DT</code> tab of the <code>shiny</code> app.</p>
+<pre class="r"><code>statenames &lt;- read.csv(&quot;StateNamesAbbrevPostalCode.csv&quot;)
+
+elections &lt;- elections %&gt;%
+        add_count(state) %&gt;%
+        rename(&quot;Women Running&quot; = n) %&gt;%
+        add_count(state, office) %&gt;%
+        rename(officeperstate = n) %&gt;% 
+        add_count(state, party) %&gt;%
+        rename(partyperstate = n) %&gt;%
+        add_count(state, office, dist) %&gt;%
+        rename(officeperdist = n) %&gt;%
+        merge(statenames, by.x = &quot;state&quot;, by.y = &quot;Postal.Code&quot;, all = TRUE) %&gt;%
+        mutate(percentparty = round(100*(partyperstate/`Women Running`), digits = 0)) %&gt;%
+        mutate(percentdem = ifelse(party == &quot;D&quot;, percentparty, 100-percentparty)) %&gt;%
+        mutate(percentrepub = 100-percentdem) %&gt;%
+        subset(!(Abbreviation %in% c(&quot;&quot;,&quot;Guam&quot;))) %&gt;%
+        rename(Office = office,Candidate = candidate,Party = party, District = dist) %&gt;%
+        droplevels()</code></pre>
+<p><code>rvest::html_table</code> takes the text from a website’s table, but doesn’t get hyperlinks to elements in the table. I scraped links to candidate websites to add them to the candidate name variable in the dataframe.</p>
+<p>Not all candidates in the CAWP list have a link and not all candidates that have links are from states (if they are from territories). The corresponding names are (re)scraped and these will be used to match the links back to the correct candidate in the <code>elections</code> dataframe. Rows missing state abbreviations will be removed (again).</p>
+<pre class="r"><code>candidate_names &lt;- webpage %&gt;%
+        html_nodes(xpath = &quot;//td/a&quot;) %&gt;% html_text()
+
+candidate_links &lt;- webpage %&gt;%
+        html_nodes(xpath = &quot;//td/a&quot;) %&gt;% html_attr(&quot;href&quot;)
+
+names_w_links &lt;- as.data.frame(cbind(candidate_names, candidate_links)) %&gt;%
+        subset(candidate_names != &quot;&quot;) %&gt;%
+        subset(candidate_links != &quot;#list&quot;)
+        
+elections &lt;- elections %&gt;%
+        merge(names_w_links,
+              by.x = &quot;Candidate&quot;, by.y = &quot;candidate_names&quot;, all = TRUE) %&gt;%
+        subset(State != &quot;&quot;)</code></pre>
+<p>For candidates that do have a website to which CAWP links, mutate the <code>elections$Candidate</code> variable to combine urls with candidate names in HTML code, to render as clickable links in the <code>shiny</code> app. For candidates without a link, don’t alter the <code>elections$Candidate</code> variable.</p>
+<pre class="r"><code>elections$candidate_links &lt;- as.character(elections$candidate_links)
+
+for (x in 1:length(elections$Candidate)){
+ifelse(is.na(elections$candidate_links)[x], 
+       (elections$Candidate[x] &lt;- elections$Candidate[x]), 
+       (elections$Candidate[x] &lt;- paste0(&quot;&lt;a href=&#39;&quot;, elections$candidate_links[x], &quot;&#39;target=&#39;_blank&#39;&gt;&quot;, elections$Candidate[x],&quot;&lt;/a&gt;&quot;))
+        )
+}</code></pre>
+<p>Save the file.</p>
+<pre class="r"><code>saveRDS(elections, &quot;elections.rds&quot;)</code></pre>
+<p>Make a dataframe for the map: select a subset of needed variables and remove duplicates so there is only one row per state. Rename and recode variables to be readable for the map’s hover text: change abbreviation <code>state</code> and full name <code>State</code> from factor to character variables and change <code>NA</code> values to <code>0</code>.</p>
+<pre class="r"><code>statedata &lt;- elections[,c(2,11,15,18,19)] %&gt;%
+        unique() %&gt;%
+        rename(&quot;Percent Democrat&quot; = &quot;percentdem&quot;) %&gt;%
+        rename(&quot;Percent Republican&quot; = &quot;percentrepub&quot;) %&gt;%
+        mutate(state = as.character(state)) %&gt;%
+        mutate(State = as.character(State)) %&gt;%
+        mutate_all(funs(replace(., is.na(.), 0)))</code></pre>
+<p>To change continuous <code>dempercent</code> variable to categorical for mapping, bin and label it. Currently, <code>statebins</code> is not fully compatible with <code>plotly</code>, resulting in a non-interactive map. To get around that, adapt code from <a href="http://bl.ocks.org/timelyportfolio/1cce2d1190460a7f1406945bdc02f4e1">Kenton Russell</a> to combine dataframe with <code>statebins</code> coordinates data <code>statebins:::state_coords</code> and plot it with no lines, tickmarks, axis labels, or grid to make a <code>plotly</code> map with working interactive hover info.</p>
+<p>Rearrange column order to create hover text variable that will be made with <code>Map</code> <code>Reduce</code>.</p>
+<p>The default <code>statebins</code> coordinates place Alaska in the bottom left of the plot, just above Hawaii. Intuitively, it should be placed in the upper left corner of the plot, northwest of an imaginary Canada. Change Alaska’s <code>row</code> variable to <code>1</code> in dataframe to move it.</p>
+<pre class="r"><code>breaks &lt;- c(0,20,40,60,80,100)
+
+labels &lt;- c(&quot;1-20% Dem&quot;, &quot;21-40% Dem&quot;, &quot;41-60% Dem&quot;, &quot;61-80% Dem&quot;, &quot;81-100% Dem&quot;)
+
+statedata &lt;- statedata %&gt;%
+        mutate(bins = cut(statedata$`Percent Democrat`, breaks, 
+                          include.lowest = T, right=FALSE, labels = labels)) %&gt;%
+        mutate(bins = as.character(bins)) %&gt;%
+        mutate(bins = as.factor(ifelse(`Women Running` == 0, &quot;0 Women Running&quot;, bins))) %&gt;%
+        merge(statebins:::state_coords[,-2], by.x = &quot;state&quot;, by.y = &quot;abbrev&quot;) %&gt;%
+        .[,c(3,2,4,5,1,6:8)] 
+
+vars &lt;- Map(
+        function(x, y) paste0(x, &quot;: &quot;, y),
+        names(statedata)[1:(ncol(statedata)-4)],
+        statedata[,1:(ncol(statedata)-4)]
+)
+
+statedata &lt;- statedata %&gt;%
+        mutate(txt = Reduce(function(x, y) paste0(x, &quot;&lt;br /&gt;&quot;, y), vars))
+
+statedata[1,8] &lt;- 1</code></pre>
+<p>Save the file.</p>
+<pre class="r"><code>saveRDS(statedata, &quot;statedata.rds&quot;)</code></pre>
+<p>Make color palette with gray to represent states with no women currently running and 5 colors ranging from the traditional American political party red (Republican) to blue (Democrat) to represent the bins for percent Republican/Democrat among women candidates per state.</p>
+<pre class="r"><code>mapcolors &lt;- c(&quot;#808080&quot;,get_palette(c(&quot;#b2182b&quot;,&quot;#2166ac&quot;), 5))</code></pre>
+<p>The full <code>shiny</code> app code, including code for the <code>DT</code> section of the app, can be found in the <code>app.R</code> and <code>global.R</code> files in <a href="https://github.com/JListman/Scrape_WomenRunning_CAWP">this GitHub repo</a>.</p>
+<p>Make a <code>plotly</code> - based <code>statebins</code> - style map for use in a <code>shiny</code> app.</p>
+<p>The working <code>shiny</code> app can be found <a href="https://jennylistman.shinyapps.io/WomenCandidates/">here</a>.</p>
+<pre class="r"><code>y_Axis &lt;- list(title = &quot;&quot;,
+                zeroline = FALSE,
+                showline = FALSE,
+                showticklabels = FALSE,
+                showgrid = FALSE
+                )
+                
+x_Axis &lt;- list(title = &quot;Hover Over State for Details&quot;,
+               zeroline = FALSE,
+               showline = FALSE,
+               showticklabels = FALSE,
+               showgrid = FALSE
+                )
+                
+hovermap&lt;- (plot_ly(statedata, x = ~col, y = ~-row) %&gt;%
+        add_markers(color = ~bins,
+                    colors = mapcolors,
+                    text = ~txt,
+                    symbol = I(&quot;square&quot;),
+                    size = I(35),
+                    hoverinfo = &quot;text&quot;
+                    ) %&gt;%
+        add_text(text = ~state, color = I(&quot;white&quot;), hoverinfo = &quot;none&quot;) %&gt;%
+        layout(showlegend = FALSE, xaxis = x_Axis, yaxis = y_Axis)
+)
+    
+hovermap            </code></pre>
+<p>Shiny app</p>
+<pre class="r"><code>library(shiny)
+library(plotly)
+library(DT)
+library(shinythemes)
+
+elections &lt;- readRDS(&quot;elections.rds&quot;)
+statedata &lt;- readRDS(&quot;statedata.rds&quot;)
+
+mapcolors &lt;- c(&quot;#808080&quot;, &quot;#B2182B&quot;, &quot;#8D2B4B&quot;, &quot;#693F6B&quot;, &quot;#45528B&quot;, &quot;#2166AC&quot;)
+
+columns &lt;- c(&quot;State&quot;, &quot;Candidate&quot;, &quot;District&quot;, &quot;Office&quot;, &quot;Party&quot;)
+
+shinyApp(
+        
+ui &lt;- fluidPage(theme = shinytheme(&quot;yeti&quot;),
+        titlePanel(&quot;Women Running for 2018 Congressional or State Office&quot;),
+        tabsetPanel(type = &quot;tabs&quot;,
+                    tabPanel(&quot;Map&quot;, align=&quot;center&quot;, plotlyOutput(&quot;statebins&quot;, width = &quot;900px&quot;, height = &quot;600px&quot;)),
+                    tabPanel(&quot;Searchable Table&quot;,
+                             fluidPage(
+                             column(4,
+                                     selectizeInput(&quot;Party&quot;, &quot;Choose Party&quot;,
+                                           c(&quot;Democrat&quot; = &quot;D&quot;,
+                                             &quot;Republican&quot; = &quot;R&quot;,
+                                             &quot;All&quot; = &quot;All&quot;
+                                             ),
+                                           multiple = TRUE,
+                                           selected = &quot;D&quot;,
+                                           width = &#39;200px&#39;
+                                           )),
+                             column(4,
+                             selectizeInput(&quot;State&quot;, &quot;Choose State(s)&quot;,
+                                            c(&quot;All&quot;= &quot;All&quot;, levels(elections$State)),
+                                            multiple = TRUE,
+                                            selected = &quot;California&quot;,
+                                            width = &#39;200px&#39;
+                                            )),
+                             column(12,
+                             DTOutput(&quot;data&quot; )))
+                    ),
+                    tabPanel(&quot;About&quot;,
+                             fluidPage(
+                                     column(10,
+                                            h3(&quot;An App to Search for Women Running for 2018 US Congressional or State Office&quot;),
+                                            p(&quot;I created this project to visualize a database maintained by the&quot;,
+                                              a(&quot;Center for American Women in Politics&quot;,
+                                                href = &quot;http://www.cawp.rutgers.edu&quot;, target = &quot;_blank&quot;), &quot;at&quot;,
+                                              a(&quot;Rutgers University.&quot;, 
+                                                href = &quot;https://www.rutgers.edu&quot;, target = &quot;_blank&quot;), 
+                                              &quot;The Center conducts research on women&#39;s participation in politics in America and maintains&quot;, 
+                                              a(&quot;a list&quot;, 
+                                                href = &quot;http://cawp.rutgers.edu/buzz-2018-potential-women-candidates-us-congress-and-statewide-elected-executive&quot;,
+                                                target = &quot;_blank&quot;),
+                                              &quot;of women potentially running for US Congress and State offices. The data are current as of 3/12/18.&quot;),
+                                            p(&quot;You can read more about&quot;, a(&quot;how&quot;, href = &quot;https://medium.com/@jblistman&quot;, target = &quot;_blank&quot;),
+                                              &quot;or&quot;, a(&quot;why&quot;, href = &quot;https://medium.com/@jblistman/an-app-to-search-for-women-running-for-office-in-2018-346f5a013ec9&quot;, target = &quot;_blank&quot;), 
+                                              &quot;I created this app on my blog.&quot;),
+                                            p(a(&quot;R&quot;, href = &quot;https://www.r-project.org&quot;, target = &quot;_blank&quot;),
+                                              &quot;code and details of data processing and visualization are available on&quot;,
+                                              a(&quot;GitHub.&quot;, icon(&quot;github&quot;), href = &quot;https://github.com/JListman/Scrape_WomenRunning_CAWP&quot;, target = &quot;_blank&quot;),
+                                              &quot;Find me, Jenny Listman, on&quot;, a(&quot;Twitter&quot;, icon(&quot;twitter&quot;),
+                                                      href = &quot;https://twitter.com/jblistman&quot;, target = &quot;_blank&quot;), &quot;or&quot;,
+                                              a(&quot;LinkedIn&quot;, icon(&quot;linkedin&quot;), 
+                                                href = &quot;https://www.linkedin.com/in/jenniferlistman/&quot;, target = &quot;_blank&quot;)),
+                                            HTML(&quot;&lt;br&gt;&lt;br&gt;&lt;br&gt;&quot;)
+                                            )
+                                     )
+                             )
+                    ),
+        tags$div(class=&quot;footer&quot;, checked=NA, tags$p(&quot;An interactive app to view data curated by the&quot;,
+                a(&quot;CAWP&quot;, href = &quot;http://www.cawp.rutgers.edu&quot;, target = &quot;_blank&quot;)),
+                tags$p(a(&quot;View code&quot;,icon(&quot;github&quot;), href = &quot;https://github.com/JListman/Scrape_WomenRunning_CAWP&quot;, target = &quot;_blank&quot;))
+                 )
+        ),
+
+
+server &lt;- function(input, output) {
+   
+        output$statebins &lt;- renderPlotly({
+                y_Axis &lt;- list(
+                        title = &quot;&quot;, 
+                        zeroline = FALSE,
+                        showline = FALSE, 
+                        showticklabels = FALSE, 
+                        showgrid = FALSE
+                )
+                
+                x_Axis &lt;- list(
+                        title = &quot;&quot;, 
+                        zeroline = FALSE,
+                        showline = FALSE, 
+                        showticklabels = FALSE, 
+                        showgrid = FALSE
+                )
+                
+                plot_ly(statedata, x = ~col, y = ~-row) %&gt;%
+                        add_markers(
+                                color = ~bins,
+                                colors = mapcolors,
+                                text = ~txt,
+                                symbol = I(&quot;square&quot;), 
+                                size = I(50),
+                                hoverinfo = &quot;text&quot;,
+                                showlegend = FALSE
+                        ) %&gt;%
+                        add_text(text = ~state, color = I(&quot;white&quot;), hoverinfo = &quot;none&quot;) %&gt;%
+                        add_annotations(
+                                x= .5,
+                                y= .95,
+                                xref = &quot;paper&quot;,
+                                yref = &quot;paper&quot;,
+                                text = &quot;Hover Over State For Details&quot;,
+                                showarrow = F
+                        ) %&gt;%
+                        layout(title = &quot;&quot;, xaxis = x_Axis, yaxis = y_Axis)
+                
+        })
+        
+        output$data &lt;- renderDT({
+                if (&quot;All&quot; %in% input$State &amp; &quot;All&quot; %in% input$Party)
+                        candidates &lt;- elections[, columns]
+                else if (&quot;All&quot; %in% input$State &amp; input$Party != &quot;All&quot;)
+                        elections[elections$Party %in% input$Party, columns]
+                else if (input$State != &quot;All&quot; &amp; &quot;All&quot; %in% input$Party)
+                        elections[elections$State %in% input$State, columns]
+                else
+                        elections[elections$Party %in% input$Party &amp; elections$State %in% input$State, columns]
+                
+        },
+        escape = FALSE)
+        
+},
+
+options = list(height = 500)
+)</code></pre>
+</div>
+
+    </div>
+
+    <div class="disqus">
+        
+    </div>
+
+<div class="container has-text-centered top-pad">
+<hr>
+<a href="/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/#top"><i class="fa fa-arrow-up"></i></a>
+<hr>
+</div>
+
+<div class="section" id="footer">
+    <div class="container has-text-centered">
+        
+            Jenny Listman 2018. Using Introduction theme by Vicky Lai
+        
+    </div>
+</div>
+
+</div>
+</div>
+
+
+<script>
+$('a[href^="\/blog\/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office\/#"]').click(function(e) {
+    e.preventDefault();
+    var target = this.hash;
+    $('html, body').animate({
+    scrollTop: $(target).offset().top
+    }, 500);
+    return false;
+})
+</script>
+
+</body>

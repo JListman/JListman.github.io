@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jenny Listman</title>
+    <link>/</link>
+    <description>Recent content on Jenny Listman</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 15 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</title>
+      <link>/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</link>
+      <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</guid>
+      <description>Interactive App To Visualize Women Runnning for State or Federal Offices This project was created with data scraped from the website of the Center for American Women in Politics at Rutgers University. The Center conducts research on women’s participation in politics in America and maintains a list of women who are or potentially will be running for US Congress and State offices.
+The code scrapes and combines data from their lists of women candidates, cleans and creates new variables, and visualizes the data in an interactive shiny map and searchable data table using plotly and DT packages .</description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>/contact/</link>
+      <pubDate>Thu, 09 Mar 2017 13:23:28 +0800</pubDate>
+      
+      <guid>/contact/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Thu, 09 Mar 2017 13:19:25 +0800</pubDate>
+      
+      <guid>/about/</guid>
+      <description>I can help your nonprofit or small business:  Get your data into a useable format and find data that you might not know you have. Analyze, summarize, &amp;amp; visualize your data to provide insight to you or your potential investors, clients, or donors. Tell your story with data. Analyse data through clustering, decision trees, and other machine learning tools.  I&amp;rsquo;m an interdisciplinary data scientist experienced in data wrangling, big data, machine learning, clustering, and data visualization.</description>
+    </item>
+    
+  </channel>
+</rss>

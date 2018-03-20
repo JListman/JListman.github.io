@@ -1,0 +1,71 @@
+baseurl             = "https://jlistman.github.io/"   # Your domain name. Must end with "/"
+languageCode        = "en-us"
+title               = "Jenny Listman"
+theme               = "hugo-theme-introduction"
+enforce_ssl         = false
+builddrafts         = false                             # Include pages with draft status of true
+canonifyurls        = true                              # Turns relative urls into absolute urls
+# disqusshortname   = "xxx"                             # Enable Disqus for comments
+# googleAnalytics   = "xxx"
+    publishDir = "../JListman.github.io"
+    
+[params]
+    bloghead            = "Fun With R Coding"                        # Full name shows on blog post pages
+    firstname           = "Jenny Listman"                # First name shows in introduction on main page
+    tagline             = "Data Science Consultant for Small Businesses & Nonprofits"       # Appears after the introduction
+    introheight         = "medium"                       # Input either 'medium' or 'large' or 'fullheight'
+    themestyle          = "dark"                        # Choose 'light' or 'dark'
+    avatar              = "img/profile.jpg"             # Path to image in static folder eg. img/avatar.png, or comment out to remove
+    email               = "jenny.listman@nyu.edu"         # Shows in contact section, or leave blank to omit
+    localtime           = true                          # Show your current local time in contact section
+    timezone            = "America/New_York"         # Your timezone as in the TZ* column of this list: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+    dateform            = "Jan 2, 2006"
+    dateformfull        = "Mon Jan 2 2006 15:04:05 EST"
+    cachebuster         = false                         # Add the current unix timestamp in query string for cache busting css assets (relevant in development mode)
+    description         = "Jenny Listman, PhD: Data Science Consulting for Small Businesses & Nonprofits"        # Max 160 characters show in search results
+    faviconfile         = "img/fav.ico"
+    #pygmentsStyle       = "monokai"                     # Choose theme: https://help.farbox.com/pygments.html
+    #pygmentsCodeFences  = true
+    syntaxHighlighter = "highlight.js"
+    highlightjsVersion = "9.11.0"
+    highlightjsCDN = "//cdn.bootcss.com"
+    highlightjsLang = ["r", "yaml"]
+    highlightjsTheme = "github"
+    footertext          = "Jenny Listman 2018. Using Introduction theme by Vicky Lai"                       # Text to show in footer (overrides default text)
+    fadein              = true                          # Turn on/off the fade-in effect
+
+    showblog            = true                          # Show Blog section on home page
+    showprojects        = true                          # Show Projects section on home page
+    projectcolumns      = "3"                           # Choose "2" or "3" columns for projects section
+    placeholderimg      = "/img/workday.jpg"            # For Projects without image
+    showallposts        = false                         # Set 'true' to list all posts on home page, or set 'false' to link to separate blog list page
+    showlatest          = true                          # Show latest blog post summary
+    sharebuttons        = true                          # On post pages, show share this social buttons
+
+    # Share buttons
+    sharetwitter        = true
+    sharefacebook       = true
+    sharepinterest      = false
+    sharegoogleplus     = true
+
+[[params.customJS]]
+      src = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"
+      integrity = "sha256-tvm0lHsuUZcOfj/0C9xJTU4OQx5KpUgxUcAXLX5kvwA="
+      crossorigin = "anonymous"
+      async = true
+      defer = true
+# Social icons appear in introduction and contact section. Add as many more as you like.
+# Find icon names here: http://fontawesome.io/cheatsheet/
+
+
+[[params.social]]
+    url = "https://twitter.com/jblistman"
+    icon = "twitter"
+
+[[params.social]]
+    url = "https://www.linkedin.com/in/jenniferlistman/"
+    icon = "linkedin"
+    
+[[params.social]]
+    url = "https://github.com/JListman"
+    icon = "github"    
