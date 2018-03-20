@@ -22,12 +22,12 @@
     
     <item>
       <title>Women Running for Office</title>
-      <link>/projects/design/</link>
+      <link>/projects/interactive-web-app/</link>
       <pubDate>Mon, 13 Nov 2017 12:21:16 -0500</pubDate>
       
-      <guid>/projects/design/</guid>
-      <description>This theme was designed by Vicky Lai. Go on, explore! 💪
-If you want to use it for your website, check out the section at the bottom of the main page. 👍</description>
+      <guid>/projects/interactive-web-app/</guid>
+      <description>This project was created with data scraped from the website of the Center for American Women in Politics at Rutgers University. The Center conducts research on women&amp;rsquo;s participation in politics in America and maintains a list of women who are or potentially will be running for US Congress and State offices.
+I wrote code to scrape and combine data from their lists of women candidates, create new variables, and visualize the data in an interactive map and searchable data table.</description>
     </item>
     
     <item>
