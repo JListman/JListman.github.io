@@ -1,4 +1,4 @@
-baseurl             = "https://jlistman.github.io/"   # Your domain name. Must end with "/"
+baseurl             = "https://jenny-listman.netlify.com/"   # Your domain name. Must end with "/"
 languageCode        = "en-us"
 title               = "Jenny Listman"
 theme               = "hugo-theme-introduction"
