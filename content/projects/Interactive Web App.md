@@ -1,7 +1,7 @@
 ---
 title: "Women Running for Office"
 date: 2017-11-13T12:21:16-05:00
-image: "img/CAWPmap.jpg"
+image: "public/img/CAWPmap.jpg"
 external_link: ""
 weight: 1
 ---
