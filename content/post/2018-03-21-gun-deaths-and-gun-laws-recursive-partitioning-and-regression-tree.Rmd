@@ -1,7 +1,7 @@
 ---
 title: 'Gun Deaths and Gun Laws: Recursive Partitioning and Regression Tree'
 author: Jenny Listman
-date: '2018-03-21'
+date: '2018-03-22'
 slug: gun-deaths-and-gun-laws-recursive-partitioning-and-regression-tree
 categories:
   - R Code
