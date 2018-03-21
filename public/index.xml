@@ -17,8 +17,9 @@
       <pubDate>Mon, 13 Nov 2017 12:21:16 -0500</pubDate>
       
       <guid>/projects/interactive-web-app/</guid>
-      <description>This project was created with data scraped from the website of the Center for American Women in Politics at Rutgers University. The Center conducts research on women&amp;rsquo;s participation in politics in America and maintains a list of women who are or potentially will be running for US Congress and State offices.
-I wrote code to scrape and combine data from their lists of women candidates, create new variables, and visualize the data in an interactive map and searchable data table.</description>
+      <description>I created this interactive web app with data scraped from CAWP. They research women&amp;rsquo;s participation in politics maintain a list of women running for US Congress and State offices.
+I wrote code to scrape and combine data from their lists, create new variables, and visualize the data in an interactive map and searchable data table.
+See the app in action here and read a blog post about it here.</description>
     </item>
     
     <item>
