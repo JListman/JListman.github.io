@@ -19,7 +19,7 @@ I'm experienced in data wrangling, big data, machine learning, clustering, and d
 
 I was most recently Assistant Director, Program Development and Evaluation at NYU's [Center for K12 STEM Education](http://engineering.nyu.edu/k12stem) where I conducted and published quantitative assessments and outcomes evaluations of K-12 teacher PD and student programs.
 
-Before that, I used genomic data to research human evolutionary and migratory history a.k.a ancestry genomics. I collected saliva samples as a DNA source from over 500 individuals in rural Thailand to create a DNA resource of six ethnic populations. I also conducted research on the evolutionary history of genes involved in alcohol metabolism and substance abuse.
+Before that, I used genomic data to research human evolutionary and migratory history, a.k.a ancestry genomics. I collected saliva samples as a DNA source from over 500 individuals in rural Thailand to create a DNA resource of six ethnic populations. I also conducted research on the evolutionary history of genes involved in alcohol metabolism and substance abuse.
 
 
 
