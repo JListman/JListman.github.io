@@ -31,7 +31,7 @@ canonifyurls        = true                              # Turns relative urls in
     highlightjsCDN = "//cdn.bootcss.com"
     highlightjsLang = ["r", "yaml"]
     highlightjsTheme = "github"
-    footertext          = "Jenny Listman &copy; 2018. Using Introduction, a Hugo theme by Vicky Lai"     <span class="footer-text"><a href="https://github.com/hivickylai/hugo-theme-introduction" target="_blank" rel="noopener">Introduction</a> theme for <a href="http://gohugo.io/" target="_blank" rel="noopener">Hugo</a>. Made with <i class="fa fa-heart"></i> and <i class="fa fa-coffee"></i>. <a href="https://vickylai.io" target="_blank" rel="noopener">Vicky Lai</a> {{ now.Format "2006" }}</span>                  # Text to show in footer (overrides default text)
+    footertext          = "Jenny Listman &copy; 2018. Using Introduction, a Hugo theme by Vicky Lai"  # Text to show in footer (overrides default text)
     fadein              = true                          # Turn on/off the fade-in effect
 
     showblog            = true                          # Show Blog section on home page
