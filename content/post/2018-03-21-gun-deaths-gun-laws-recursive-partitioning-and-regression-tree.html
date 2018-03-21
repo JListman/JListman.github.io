@@ -1,0 +1,217 @@
+---
+title: 'Gun Deaths & Gun Laws: Recursive Partitioning And Regression Tree'
+author: Jenny Listman
+date: '2018-03-21'
+slug: gun-deaths-gun-laws-recursive-partitioning-and-regression-tree
+categories:
+  - R Code
+tags:
+  - rpart
+  - regression tree
+  - gun laws
+  - CDC wonder
+---
+
+
+
+<div id="this-project-uses-a-recursive-partitioning-and-regression-tree-analysis-from-the-rpart-package-to-examine-the-effect-of-49-gun-law-subcategories-on-annual-state-firearm-death-rates.-ten-subcategories-were-found-to-significantly-predict-state-gun-death-rate-decreases-or-increases." class="section level4">
+<h4>This project uses a Recursive Partitioning And Regression Tree analysis from the <code>rpart</code> package to examine the effect of 49 gun law subcategories on annual State firearm death rates. Ten subcategories were found to significantly predict State gun death rate decreases or increases.</h4>
+</div>
+<div id="read-the-blog-post-about-it-here-and-see-the-readme-file-for-the-infographic." class="section level4">
+<h4>Read the blog post about it <a href="https://medium.com/@jblistman">here</a> and see the readme file for the infographic.</h4>
+<p>Load packages</p>
+<pre class="r"><code>library(tidyverse)
+library(rpart)
+library(janitor)
+library(stringr)
+library(readxl)
+library(Metrics)
+library(rlist)</code></pre>
+<p>Obtain and read in datasets.</p>
+<ol style="list-style-type: decimal">
+<li>Gun law data, firearm laws across US States from 1991 to 2017 downloaded from The <a href="https://www.statefirearmlaws.org/table.html">State Firearm Laws Project</a> and <a href="https://www.statefirearmlaws.org/download-codebook.html">codebook</a></li>
+</ol>
+<p>Presense/absense of a given gun law in a state is coded as “1” or “0”. These and “Year” are being read as numeric by R so will need to be changed to factor variables. State is already read as factor variable.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Download CDC cause of death by State from firearms 1999 to 2016 data. On the <a href="https://wonder.cdc.gov/ucd-icd10.html">CDC Wonder</a> website, sort by State, Year, and cause of injury = Firearm. This produces a file that contains the crude death rate per 100,000 state residents due to firearm per state per year. This was saved as StateGunDeathRate.csv</li>
+</ol>
+<pre class="r"><code>StateGunDeathRate &lt;- read.csv(&quot;./data/StateGunDeathRate.csv&quot;)
+
+gunlawdata &lt;- read.csv(&quot;./data/gunlawdata.csv&quot;)</code></pre>
+<p>Gunlawdata contains data going back to 1991, but CDC data only goes back to 1999. Remove years up to 1999 from gunlawdata.</p>
+<pre class="r"><code>gunlaws &lt;- subset(gunlawdata, year &gt; 1998)</code></pre>
+<p>Add total for each category of gun law from codebook and create new variables. Add death rate per 100,0000 to dataframe as outcome variable.</p>
+<p>The <a href="https://www.statefirearmlaws.org/download-codebook.html">codebook</a> includes each law, its category, and subcategory which have been coded by The State Firearm Laws Project research team. Some of the law categories are quite broad and the 133 individual laws may be redundant or correlated. I have used law subcategories, but also ran the same analysis using individual laws and again with categories. Subcategories perfoms about the same as when using individual laws as input but using the 14 broader categories makes less accurate predictions. Perhaps the categories (14) lose information but the subcategories (49) keep most of the information provided by the individual laws.</p>
+<p>Counts of gun laws present per State per year must be calculated for each subcategory, but the subcategories contain different numbers of laws. Make a list of lists that contains, for each subcategory name, a list of the column names for the laws in that subcategory. These will be used to sum only the columns that fall within a given subcategory.</p>
+<pre class="r"><code>codebook &lt;- as.data.frame(read_excel(&quot;./data/gunlaw_codebook.xlsx&quot;)) %&gt;%
+        .[,c(1,3,4)]
+
+codebook$`Sub-Category` &lt;- as.factor(codebook$`Sub-Category`)
+
+codebook &lt;- codebook %&gt;%
+        add_count(`Sub-Category`) %&gt;%
+        rowid_to_column() %&gt;%
+        mutate(sublevel = as.numeric(`Sub-Category`))
+
+singles &lt;- subset(codebook, n == 1)
+single_categories &lt;- data.frame()
+
+for (i in 1:nrow(singles)){
+        single_categories &lt;- rbind(single_categories, singles[i,c(3,4,6)])
+}
+
+single_categories &lt;- single_categories %&gt;%
+        mutate(mutation = paste0(`Sub-Category`,&quot;=&quot; ,`Variable Name` )) %&gt;%
+        .[,c(3,4)]
+
+
+codenames &lt;- list()
+for (i in 1:49){
+        lawnames &lt;- as.list(subset(codebook, 
+                                   sublevel == i)$`Variable Name`)
+        codenames[[length(codenames)+1]] &lt;- lawnames
+}
+
+colnames &lt;- names(gunlaws)</code></pre>
+<p>Now add firearm death rate data to gun law data. Then, using <code>mutate</code> and <code>rowSums</code> with the <code>codenames</code> list of lists, make new variables for the total number of laws within each subcategory by State and year. Use <code>janitor</code> <code>clean_names</code> to get rid of spaces and capital letters in variable names.</p>
+<pre class="r"><code>gunlawsevensplit &lt;-  gunlaws %&gt;%
+        subset(year != 2017) %&gt;%
+        merge(StateGunDeathRate[,c(1,2,6)], by.x = c(&quot;state&quot;, &quot;year&quot;), by.y = c(&quot;State&quot;, &quot;Year&quot;)) %&gt;%
+        mutate(age_restrictions = rowSums(.[,colnames(.) %in% unlist(codenames[[1]])])
+               ) %&gt;%
+        mutate(Alcohol = rowSums(.[,colnames(.) %in% unlist(codenames[[2]])])
+               ) %&gt;%
+        mutate(`Assault weapons ban` = rowSums(.[,colnames(.) %in% unlist(codenames[[3]])])
+               ) %&gt;%
+        mutate(`Background check records`=backgroundpurge) %&gt;%
+        mutate(`Background checks` = rowSums(.[,colnames(.) %in% unlist(codenames[[5]])])
+               ) %&gt;%
+        mutate(`Background checks mental health records`=mentalhealth) %&gt;%
+        mutate(`Background checks state records` = rowSums(.[,colnames(.) %in% unlist(codenames[[7]])])
+               ) %&gt;%
+        mutate(`Background checks through permits` = rowSums(.[,colnames(.) %in% unlist(codenames[[8]])])
+               ) %&gt;%
+        mutate(`Background checks time limit`=threedaylimit) %&gt;%
+        mutate(`Bulk purchase limit`=onepermonth) %&gt;%
+        mutate(`Campus carry` = rowSums(.[,colnames(.) %in% unlist(codenames[[11]])])
+               ) %&gt;%
+        mutate(`Crime gun identification`=microstamp) %&gt;%
+        mutate(Drugs=drugmisdemeanor) %&gt;%
+        mutate(Felony=felony) %&gt;%
+        mutate(Fingerprinting=fingerprint) %&gt;%
+        mutate(`Firearm removal` = rowSums(.[,colnames(.) %in% unlist(codenames[[16]])])
+               ) %&gt;%
+        mutate(`Gun shows` = rowSums(.[,colnames(.) %in% unlist(codenames[[17]])])
+               ) %&gt;%
+        mutate(`Gun trafficking` = rowSums(.[,colnames(.) %in% unlist(codenames[[18]])])
+               ) %&gt;%
+        mutate(`Gun violence restraining orders` = rowSums(.[,colnames(.) %in% unlist(codenames[[19]])])
+               ) %&gt;%
+        mutate(Immunity=immunity) %&gt;%
+        mutate(Inspections=inspection) %&gt;%
+        mutate(`Junk guns`=junkgun) %&gt;%
+        mutate(`Large capacity magazine ban` = rowSums(.[,colnames(.) %in% unlist(codenames[[23]])])
+               ) %&gt;%
+        mutate(Liability=liability) %&gt;%
+        mutate(Licensing = rowSums(.[,colnames(.) %in% unlist(codenames[[25]])])
+               ) %&gt;%
+        mutate(Location=residential) %&gt;%
+        mutate(`Mental Health` = rowSums(.[,colnames(.) %in% unlist(codenames[[27]])])
+               ) %&gt;%
+        mutate(`Misdemeanor crimes` = rowSums(.[,colnames(.) %in% unlist(codenames[[28]])])
+               ) %&gt;%
+        mutate(`Open carry` = rowSums(.[,colnames(.) %in% unlist(codenames[[29]])])
+               ) %&gt;%
+        mutate(Permitting = rowSums(.[,colnames(.) %in% unlist(codenames[[30]])])
+               ) %&gt;%
+        mutate(`Personalized gun technology`=personalized) %&gt;%
+        mutate(Preemption = rowSums(.[,colnames(.) %in% unlist(codenames[[32]])])
+               ) %&gt;%
+        mutate(Prohibitors=ammrestrict) %&gt;%
+        mutate(Recordkeeping = rowSums(.[,colnames(.) %in% unlist(codenames[[34]])])
+               ) %&gt;%
+        mutate(Registration = rowSums(.[,colnames(.) %in% unlist(codenames[[35]])])
+               ) %&gt;%
+        mutate(Reporting = rowSums(.[,colnames(.) %in% unlist(codenames[[36]])])
+               ) %&gt;%
+        mutate(`Restraining order` = rowSums(.[,colnames(.) %in% unlist(codenames[[37]])])
+               ) %&gt;%
+        mutate(`Safety locks` = rowSums(.[,colnames(.) %in% unlist(codenames[[38]])])
+               ) %&gt;%
+        mutate(`Safety training`=training) %&gt;%
+        mutate(`School zones`=elementary) %&gt;%
+        mutate(Security=security) %&gt;%
+        mutate(Stalking=stalking) %&gt;%
+        mutate(`No stand your ground`=nosyg) %&gt;%
+        mutate(Storage = rowSums(.[,colnames(.) %in% unlist(codenames[[44]])])
+               ) %&gt;%
+        mutate(`Straw purchase` = rowSums(.[,colnames(.) %in% unlist(codenames[[45]])])
+               ) %&gt;%
+        mutate(`Theft reporting` = rowSums(.[,colnames(.) %in% unlist(codenames[[46]])])
+               ) %&gt;%
+        mutate(`Universal background checks` = rowSums(.[,colnames(.) %in% unlist(codenames[[47]])])
+               ) %&gt;%
+        mutate(`Violent Misdemeanor` = rowSums(.[,colnames(.) %in% unlist(codenames[[48]])])
+               ) %&gt;%
+        mutate(`Waiting period` = rowSums(.[,colnames(.) %in% unlist(codenames[[49]])])
+               ) %&gt;%
+        clean_names()</code></pre>
+<p><code>rpart</code> automatically uses a 10-fold cross validation, so we don’t have to make a validation data set or add in a cross-validation step. Scale the input variables and separate the data into a train and test set. Typically, this is done by randomly selecting 20% of the data as a test set and 80% as a train set. However, for this data set, it is likely that there are correlations across States for a given year and correlations across years for a given State, or correlations among years within each small range of years. Therefore, the data set was split by odd or even year into two sets, each balanced for State and removing early/recent year bias. A repeat analysis I completed with the typical 20/80 random split gave incredibly similar results.</p>
+<pre class="r"><code>ml_lawsubcategories &lt;- gunlawsevensplit[,c(1:2,137:186)] %&gt;%
+        mutate(state_year = paste0(state, year)) %&gt;%
+        mutate_each_(funs(scale(.) %&gt;% as.vector), vars=names(.[4:52])) 
+
+ml_lawsubcategories_train &lt;- subset(ml_lawsubcategories, year %in% c(1999,2001,2003,2005,2007,2009,2011,2013,2015)) %&gt;%
+        .[,-c(1,2,53)]
+        
+ml_lawsubcategories_test &lt;- subset(ml_lawsubcategories, year %in% c(2000,2002,2004,2006,2008,2010,2012,2014,2016)) %&gt;%
+         .[,-c(1,2,53)]</code></pre>
+<p>Run the model and look at the results. Predict values for the test set and calculate the root mean squared error. The <code>Metrics</code> package includes a <code>rmse</code> function. Print the model and the cp(complexity parameter) table.</p>
+<pre class="r"><code>lawsubcategories_model &lt;- rpart(formula = crude_rate ~ ., data = ml_lawsubcategories_train, method = &quot;anova&quot;)
+
+print(lawsubcategories_model)
+printcp(lawsubcategories_model)
+
+lawsubcategories_pred &lt;- predict(object = lawsubcategories_model,
+                         newdata = ml_lawsubcategories_test)
+
+rmse_subcategories &lt;- rmse(actual = ml_lawsubcategories_test$crude_rate, 
+     predicted = lawsubcategories_pred)
+
+rmse_subcategories</code></pre>
+<p>Prune the tree to find the optimal model that avoids overfitting. It turns out to be the same as the above model.</p>
+<pre class="r"><code>opt_index &lt;- which.min(lawsubcategories_model$cptable[, &quot;xerror&quot;])
+cp_opt &lt;- lawsubcategories_model$cptable[opt_index, &quot;CP&quot;]
+
+lawsubcategories_model_opt &lt;- prune(tree = lawsubcategories_model, 
+                         cp = cp_opt)
+print(lawsubcategories_model_opt)                          
+plot(lawsubcategories_model_opt)
+text(lawsubcategories_model_opt, use.n=TRUE, all=TRUE, cex = 0.5)</code></pre>
+<p>I need to translate the z-scored values back to the original values they represent in order to make an infographic. The options in <code>rpart</code> <code>visNetwork</code> and <code>networkD3</code> didn’t produce the exact tree that I wanted or didn’t have the editing options I was looking for. Re-run lines 142 - 243 of the code above to create the same dataset but without z-scores. Then create a decoder dataframe that lists z-sores and original values. Use <code>list.save</code> from the <code>rlist</code> package to save the output to a file.</p>
+<pre class="r"><code>z_scored_test_data &lt;- ml_lawsubcategories_test
+
+names &lt;- names(cbind(ml_lawsubcategories_test, z_scored_test_data))
+
+z_score_codes &lt;- cbind(ml_lawsubcategories_test, z_scored_test_data) %&gt;%
+       .[ , order(names)] %&gt;%
+        .[,c(25,96,1:24,26:95,97:100)]
+
+names2 &lt;- names(z_score_codes[,-c(1,2)])
+
+z_score_codes &lt;- z_score_codes %&gt;%
+        mutate_each_(funs(as.character(.)), names2) %&gt;%
+        mutate_each_(funs(as.factor(.)), names2) %&gt;%
+        .[,-c(1,2)]
+
+decoder &lt;- list()
+j = 1
+k = 2
+
+for (i in 1:49){decoder[[i]] &lt;- unique(z_score_codes[,c(j, k)])
+j = j+2
+k = k+2
+}
+
+list.save(decoder, &quot;zscore_decoder.rds&quot;)</code></pre>
+</div>
