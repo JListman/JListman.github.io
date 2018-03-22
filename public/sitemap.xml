@@ -3,119 +3,113 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://jenny-listman.netlify.com/projects/interactivewebapp/</loc>
+    <loc>/projects/interactivewebapp/</loc>
     <lastmod>2017-11-13T12:21:16-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/projects/nycrats/</loc>
+    <loc>/projects/nycrats/</loc>
     <lastmod>2017-11-13T12:21:16-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/projects/gunlaws/</loc>
+    <loc>/projects/gunlaws/</loc>
     <lastmod>2017-11-13T12:21:16-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/post/gun-deaths-and-gun-laws-recursive-partitioning-and-regression-tree/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/blog/gun-deaths-and-gun-laws-recursive-partitioning-and-regression-tree/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</loc>
+    <loc>/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</loc>
     <lastmod>2018-03-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/contact/</loc>
+    <loc>/contact/</loc>
     <lastmod>2017-03-09T13:23:28+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2017-03-09T13:19:25+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/blog/</loc>
-    <lastmod>2018-03-15T00:00:00+00:00</lastmod>
+    <loc>/blog/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/categories/</loc>
+    <loc>/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/cdc-wonder/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/tags/gun-deaths/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/gun-laws/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/tags/gun-laws/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/</loc>
+    <loc>/</loc>
     <lastmod>2017-11-13T12:21:16-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/post/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://jenny-listman.netlify.com/projects/</loc>
+    <loc>/projects/</loc>
     <lastmod>2017-11-13T12:21:16-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/categories/r-code/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/categories/r-code/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/regression-tree/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/tags/regression-tree/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/rpart/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/tags/rpart/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/shiny/</loc>
+    <loc>/tags/shiny/</loc>
     <lastmod>2018-03-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/statebins/</loc>
+    <loc>/tags/statebins/</loc>
     <lastmod>2018-03-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/</loc>
-    <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+    <loc>/tags/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jenny-listman.netlify.com/tags/webscraping/</loc>
+    <loc>/tags/webscraping/</loc>
     <lastmod>2018-03-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

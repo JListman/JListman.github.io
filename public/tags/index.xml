@@ -2,75 +2,75 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Jenny Listman</title>
-    <link>https://jenny-listman.netlify.com/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on Jenny Listman</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 21 Mar 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 22 Mar 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://jenny-listman.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Cdc Wonder</title>
-      <link>https://jenny-listman.netlify.com/tags/cdc-wonder/</link>
-      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      <title>Gun Deaths</title>
+      <link>/tags/gun-deaths/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/cdc-wonder/</guid>
+      <guid>/tags/gun-deaths/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Gun Laws</title>
-      <link>https://jenny-listman.netlify.com/tags/gun-laws/</link>
-      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      <link>/tags/gun-laws/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/gun-laws/</guid>
+      <guid>/tags/gun-laws/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Regression Tree</title>
-      <link>https://jenny-listman.netlify.com/tags/regression-tree/</link>
-      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      <link>/tags/regression-tree/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/regression-tree/</guid>
+      <guid>/tags/regression-tree/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Rpart</title>
-      <link>https://jenny-listman.netlify.com/tags/rpart/</link>
-      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      <link>/tags/rpart/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/rpart/</guid>
+      <guid>/tags/rpart/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Shiny</title>
-      <link>https://jenny-listman.netlify.com/tags/shiny/</link>
+      <link>/tags/shiny/</link>
       <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/shiny/</guid>
+      <guid>/tags/shiny/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Statebins</title>
-      <link>https://jenny-listman.netlify.com/tags/statebins/</link>
+      <link>/tags/statebins/</link>
       <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/statebins/</guid>
+      <guid>/tags/statebins/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Webscraping</title>
-      <link>https://jenny-listman.netlify.com/tags/webscraping/</link>
+      <link>/tags/webscraping/</link>
       <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://jenny-listman.netlify.com/tags/webscraping/</guid>
+      <guid>/tags/webscraping/</guid>
       <description></description>
     </item>
     

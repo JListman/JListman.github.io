@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-us">
 
-<link rel="stylesheet" href="https://jenny-listman.netlify.com/css/rainbow.css" rel="stylesheet" id="theme-stylesheet">
-<script src="https://jenny-listman.netlify.com/js/highlight.pack.js"></script>
+<link rel="stylesheet" href="/css/rainbow.css" rel="stylesheet" id="theme-stylesheet">
+<script src="/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 <head>
@@ -14,14 +14,14 @@
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Jenny Listman, PhD: Data Science Consulting for Small Businesses &amp; Nonprofits">
 
-<base href="https://jenny-listman.netlify.com/">
+<base href="/">
 <title>
 
 
      Blogs 
 
 </title>
-<link rel="canonical" href="https://jenny-listman.netlify.com/blog/">
+<link rel="canonical" href="/blog/">
 
 
 
@@ -63,7 +63,7 @@ ga('send', 'pageview');
 
 
 
-  <link href="https://jenny-listman.netlify.com/blog/index.xml" rel="alternate" type="application/rss+xml" title="Jenny Listman" />
+  <link href="/blog/index.xml" rel="alternate" type="application/rss+xml" title="Jenny Listman" />
 
 
 </head>
@@ -89,22 +89,22 @@ ga('send', 'pageview');
     </span>
     <div id="nav-menu" class="nav-left nav-menu">
       <span class="nav-item">
-        <a href="https://jenny-listman.netlify.com/">Main</a>
+        <a href="/">Main</a>
       </span>
       <span class="nav-item">
-        <a href="https://jenny-listman.netlify.com/#about">About</a> 
-      </span>
-    
-      <span class="nav-item">
-        <a href="https://jenny-listman.netlify.com/#projects">Projects</a> 
+        <a href="/#about">About</a> 
       </span>
     
       <span class="nav-item">
-        <a href="https://jenny-listman.netlify.com/#contact">Contact</a>
+        <a href="/#projects">Projects</a> 
       </span>
     
       <span class="nav-item">
-        <a href="https://jenny-listman.netlify.com/index.xml"><i class="fa fa-rss"></i></a>
+        <a href="/#contact">Contact</a>
+      </span>
+    
+      <span class="nav-item">
+        <a href="/index.xml"><i class="fa fa-rss"></i></a>
       </span>
     
     </div>
@@ -117,13 +117,12 @@ ga('send', 'pageview');
     
     <h2 class="title is-2 top-pad">Latest Post</h2>
          
-        <div class="summary">Mar 15, 2018
-            <h3 class="title is-3 strong-post-title"><a href="https://jenny-listman.netlify.com/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/">Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</a></h3>
+        <div class="summary">Mar 22, 2018
+            <h3 class="title is-3 strong-post-title"><a href="/blog/gun-deaths-and-gun-laws-recursive-partitioning-and-regression-tree/">Gun Deaths and Gun Laws: Recursive Partitioning and Regression Tree</a></h3>
                 <div class="markdown">
-                Interactive App To Visualize Women Runnning for State or Federal Offices This project was created with data scraped from the website of the Center for American Women in Politics at Rutgers University. The Center conducts research on women’s participation in politics in America and maintains a list of women who are or potentially will be running for US Congress and State offices.
-The code scrapes and combines data from their lists of women candidates, cleans and creates new variables, and visualizes the data in an interactive shiny map and searchable data table using plotly and DT packages .
+                This project uses a Recursive Partitioning And Regression Tree analysis from the rpart package to examine the effect of 49 gun law subcategories on annual State firearm death rates. Ten subcategories were found to significantly predict State gun death rate decreases or increases.  Data files needed to run this code can be found in my GitHub repo associated with the project.Read the blog post about it here and see the readme file for the infographic.
                 
-                <a href="https://jenny-listman.netlify.com/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/">...Read More</a>
+                <a href="/blog/gun-deaths-and-gun-laws-recursive-partitioning-and-regression-tree/">...Read More</a>
                 
                 </div>
         </div>
@@ -135,7 +134,13 @@ The code scrapes and combines data from their lists of women candidates, cleans 
         
             
                 <li class="post-item">
-    <span><a href="https://jenny-listman.netlify.com/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/">Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</a></span> - <span>Mar 15, 2018</span>
+    <span><a href="/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/">Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</a></span> - <span>Mar 15, 2018</span>
+</li>
+            
+        
+            
+                <li class="post-item">
+    <span><a href="/blog/gun-deaths-and-gun-laws-recursive-partitioning-and-regression-tree/">Gun Deaths and Gun Laws: Recursive Partitioning and Regression Tree</a></span> - <span>Mar 22, 2018</span>
 </li>
             
         
@@ -145,7 +150,7 @@ The code scrapes and combines data from their lists of women candidates, cleans 
 
 <div class="container has-text-centered top-pad">
 <hr>
-<a href="https://jenny-listman.netlify.com/blog/#top"><i class="fa fa-arrow-up"></i></a>
+<a href="/blog/#top"><i class="fa fa-arrow-up"></i></a>
 <hr>
 </div>
 
@@ -162,7 +167,7 @@ The code scrapes and combines data from their lists of women candidates, cleans 
 
 
 <script>
-$('a[href^="https:\/\/jenny-listman.netlify.com\/blog\/#"]').click(function(e) {
+$('a[href^="\/blog\/#"]').click(function(e) {
     e.preventDefault();
     var target = this.hash;
     $('html, body').animate({
