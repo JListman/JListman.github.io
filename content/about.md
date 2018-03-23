@@ -21,5 +21,7 @@ I was most recently Assistant Director, Program Development and Evaluation at NY
 
 Before that, I used genomic data to research human evolutionary and migratory history, a.k.a ancestry genomics. I collected saliva samples as a DNA source from over 500 individuals in rural Thailand to create a DNA resource of six ethnic populations. I also conducted research on the evolutionary history of genes involved in alcohol metabolism and substance abuse.
 
+You can view my [resume](img/JListman_Resume_2_2018.pdf).
+
 
 
