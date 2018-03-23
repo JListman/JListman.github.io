@@ -1,0 +1,154 @@
+---
+title: Make an Animated Map of Rat Sightings From NYC311 Data
+author: Jenny Listman
+date: '2018-03-20'
+slug: make-an-animated-map-of-rat-sightings-from-nyc311-data
+categories:
+  - R Code
+tags:
+  - NYC 311
+  - choropleth
+  - animation
+  - open data
+---
+
+
+
+<p>New York City maintains an <a href="https://opendata.cityofnewyork.us">open data portal</a> making data from many City agencies publicly available. If you’re looking for a good dataset to use for practicing data manipulation, analysis, or visualization techniques, it is a gold mine. NYC’s 311 system takes calls or online complaints and questions about any non-emergency matter, all of which are available on the NYC Open Data website. NYC 311 has a rodent sighting category and rat sub-category, which I used for this project.</p>
+<p>You can read my Medium <a href="https://towardsdatascience.com/new-yorkers-should-learn-to-get-along-with-rats-because-theyre-not-leaving-a-data-visualization-db4ca516762b">blog post</a> about rats in NYC and some of the factors that might contribute to seasonal changes and Borough or neighborhood differences in rat 311 reports.</p>
+<p>This post describes the R code used to process, analyse, and visualize the data. <img src="img/ratmaps.gif" /></p>
+<p>Load packages used</p>
+<pre class="r"><code>library(tidyverse)
+library(data.table)</code></pre>
+<p>You can use data stored in my <a href="https://github.com/JListman/NYC_311_animated_map">GitHub repository</a> associated with this project or you can download an updated version of 311 data from NYC Open Data.</p>
+<p>I downloaded <a href="https://data.cityofnewyork.us/Social-Services/Rat-and-Mouse-Sightings/tyjc-9rwy?category=Social-Services&amp;view_name=Rat-and-Mouse-Sightings">NYC 311 data on rat and mouse sightings</a> from January, 2010 through July, 2017 and saved it as <code>Rat_and_Mouse_Sightings.csv</code>.</p>
+<p>This was read into R with <code>data.table::fread</code>, faster than <code>read.csv</code>.</p>
+<p>Variable names were changed to snake case using . Character variables were changed to factors. Rows were selected for Descriptor = “Rat Sighting” to remove mouse sightings from dataframe. “Created_Date” was turned into date format, then month, year and Month_Year variables were extracted in case they’re needed for plotting. This was saved as RatData.csv</p>
+<pre class="r"><code>RatMouseSightings &lt;- fread(&quot;Rat_and_Mouse_Sightings.csv&quot;)</code></pre>
+<p>This results in a large data set with many variables not needed for this project.</p>
+<p>Look at the first few rows to understand the variables we have.</p>
+<pre class="r"><code>View(head(RatMouseSightings))</code></pre>
+<p>Make a smaller dataframe by removing unneeded columns keeping only “Created Date”, “Descriptor”,“Incident Zip”, and “Borough”. Look at the first few rows again to make sure the correct variables were kept.</p>
+<pre class="r"><code>RatMouseData &lt;- as.data.frame(RatMouseSightings[,c(2,7,9,25)])
+View(head(RatMouseData))</code></pre>
+<p>Remove the super large file from memory, since we’re now working with a file that only contains 4 of the original 57 columns (variables).</p>
+<pre class="r"><code>rm(RatMouseSightings)</code></pre>
+<p>Fix the variable names to remove spaces using <code>janitor::clean_names</code>. Then turn multiple variables from character to factor, at the same time.</p>
+<pre class="r"><code>RatMouseData &lt;- RatMouseData %&gt;% clean_names()
+
+cols &lt;- c(&quot;Descriptor&quot;, &quot;Incident_Zip&quot;, &quot;Borough&quot;)
+
+RatMouseData &lt;- RatMouseData %&gt;% mutate_at(cols, funs(factor(.)))</code></pre>
+<p>Make a new dataframe with the subset of rows for which Descriptor variable is “Rat Sighting”.</p>
+<pre class="r"><code>RatData &lt;- subset(RatMouseData, Descriptor == &quot;Rat Sighting&quot;)</code></pre>
+<p>Turn “Created_Date” variable, currently a string, into POSIXct date format. Then get Month, Year and Month_Year variables because you might want any/all of those for exploratory analysis or plotting. Create them as factor variables instead of numeric or character. Save the dataframe of rat sighting data as a <code>.rds</code> file to preserve variable formatting for the next time you want to use it.</p>
+<pre class="r"><code>RatData &lt;- RatData %&gt;% 
+mutate(Created_Date = as.POSIXct(Created_Date, &quot;%m/%d/%Y %I:%M:%S %p&quot;, tz=&quot;&quot;)) %&gt;%
+mutate(Year = as.factor(year(RatData$Created_Date))) %&gt;%
+mutate(Month = as.factor(month(RatData$Created_Date))) %&gt;%
+mutate(Month_Year = as.factor(format(RatData$Created_Date, &quot;%Y-%m&quot;)))
+
+saveRDS(RatData, &quot;RatData.rds&quot;)</code></pre>
+<p>Read in census data NYCpopsizebyzip.csv (found in my <a href="https://github.com/JListman/NYC_311_animated_map">GitHub repository</a> associated with this project) for popoulation size by NYC zip code. Add population count (<code>NYCpopsizebyzip$value</code>) to <code>RatData</code> by matching zip codes. <code>region</code> variable in <code>NYCpopsizebyzip</code> must be changed from numeric to factor in order to use <code>base::merge</code>. Use <code>droplevels</code> to remove <code>Incident_Zip</code> and <code>Borough</code> typos, NAs, or errors from NYC 311 database. Rename <code>value</code> (population count variable from <code>NYCpopsizebyzip</code>) to be self-explanatory.</p>
+<pre class="r"><code>NYCpopsizebyzip &lt;- read.csv(&quot;NYCpopsizebyzip.csv&quot;, header=TRUE)
+
+NYCpopsizebyzip$region &lt;- as.factor(NYCpopsizebyzip$region)
+
+RatData &lt;- RatData %&gt;%
+        merge(NYCpopsizebyzip, by.x=&quot;Incident_Zip&quot;, by.y=&quot;region&quot;) %&gt;%
+         rename(&quot;popsize&quot; = value) %&gt;%
+        droplevels()</code></pre>
+<p>Make a tidy Zip dataframe including new variable of calls per Month_Year by zip code with <code>dplyr::count</code>. Rename the newly created variable (automatically named <code>n</code> by <code>dplyr::count</code> default) to be self-explanatory.</p>
+<pre class="r"><code>TidyRatDataZip &lt;- RatData %&gt;% 
+        count(Incident_Zip, popsize, Month_Year) %&gt;%
+        rename(&quot;count_calls_Zip&quot; = n)</code></pre>
+<p>For mapping with <code>choroplethrZip</code>, Zip needs to be named “region” and the mapped factor variable must be named “value” and needs labels for the legend to make sense.</p>
+<p>It can be more useful to compare relative instead of absolute counts across regions, when making a map data visualization. Make new variables based on rat reports per population count per region. First make a numeric variable of rat reports per zip code population size, then bin it to create a factor variable which will be used as the mapped “value” in <code>choroplethrZip</code>.</p>
+<p>To come up with reasonable <code>breaks</code> for the bins using the base R function <code>cut</code>, look at the distribution of the variable you want to map. Visually inspect the distribution of the factor variable to be mapped onto zip codes by printing a table. I had to change break values a couple of times before I was happy with the results. I then used <code>label</code> to make the bins appear in the map legend in a readable manner. Default labels can be ugly.</p>
+<pre class="r"><code>TidyRatDataZip &lt;-  TidyRatDataZip %&gt;%
+        mutate(ReportPer10K = (count_calls_Zip/popsize)*10000) %&gt;%
+        mutate(value = cut(ReportPer10K,
+                                     breaks = c(0.09,0.35,0.55, 0.8, 1.1, 1.5, 2.0,3,10,41), 
+                                     labels = c(&quot;0.09-0.35&quot;,&quot;0.35-0.55&quot;,&quot;0.55-0.80&quot;,&quot;0.80-1.10&quot;,&quot;1.10-1.50&quot;,&quot;1.50-2.00&quot;, &quot;2.00-3.00&quot;,&quot;3.00-10.00&quot;,&quot;10.00-41.00&quot;))) %&gt;%
+        mutate(region = Incident_Zip)
+
+table(TidyRatDataZip$value)</code></pre>
+<p>Make a smoothed line plot of median call density per Month_Year across all zips within each Borough to show seasonality.</p>
+<div class="figure">
+<img src="img/RatCalls.jpg" />
+
+</div>
+<p>First, create a new data frame with Month_Year in proper order for plotting &amp; create a new median variable. I used median number of rat reports per 10,000 residents rather than mean because the distribution was quite skewed.</p>
+<pre class="r"><code>RatCallsByBoroughMedian &lt;- RatData %&gt;% 
+        count(Incident_Zip, Borough, popsize, Month_Year) %&gt;%
+        rename(&quot;count_calls_Zip&quot; = n) %&gt;%
+        mutate(ReportPer10K = (count_calls_Zip/popsize)*10000) %&gt;%
+        group_by(Borough, Month_Year) %&gt;%
+        summarize(MedianMonthYearReportPer10K = median(ReportPer10K))</code></pre>
+<p>Create a dummy variable, “Order”, to make plotting the x-axis easier. “Order” is a number from 1 to 92, which is the number of levels for the factor variable “Month_Year”. Change names of “Order” variable manually for x-axis using only January and July so x-axis is readable instead of crowded and seasonality is visible. The <code>\n</code> within each xlabel makes them print on two lines instead of a single, unreadable line. Again, I downloaded the data in July, 2017. If you do a new download now, instead of using my stored data, you’ll need to deal with Month_Year levels that are not addressed in my code.</p>
+<pre class="r"><code>RatCallsByBoroughMedian$Order &lt;- seq_along(1:92) 
+xlabels &lt;- c(&quot;Jan \n2010&quot;,&quot;July \n2010&quot;,&quot;Jan \n2011&quot;,&quot;July \n2011&quot;,&quot;Jan \n2012&quot;,
+            &quot;July \n2012&quot;,&quot;Jan \n2013&quot;,&quot;July \n2013&quot;,&quot;Jan \n2014&quot;,&quot;July \n2014&quot;,
+            &quot;Jan \n2015&quot;,&quot;July \n2015&quot;,&quot;Jan \n2016&quot;,&quot;July \n2016&quot;,&quot;Jan \n2017&quot;,&quot;July \n2017&quot;)</code></pre>
+<p>Make a lineplot graph using <code>ggplot::geom_smooth</code>. This also took some fiddling with the parameters of the smoothing function to make it look reasonable. I used <code>theme_minimal</code> to get rid of lots of distracting lines and then used <code>geom_vline</code> to re-insert vertical lines only at January &amp; July axis ticks for a cleaner look.</p>
+<p>You can add a <code>caption</code> for the graph, with your Twitter handle or website and the data source, so if someone posts the image, everyone gets credit.</p>
+<pre class="r"><code>RatCallsByMonthBorough &lt;- ggplot(RatCallsByBoroughMedian,aes(Order, MedianMonthYearReportPer10K)) +
+        geom_smooth(aes(group=Borough, color=Borough), na.rm = TRUE, 
+                    formula = y ~ s(x, k = 50), method = &quot;gam&quot;, n= 100, se = FALSE)+
+        theme_minimal() +
+        xlab(&quot;\nMonth &amp; Year&quot;) + 
+        ylab(&quot;Rat Reports to 311 Per 10,000 Residents\n&quot;) + 
+        labs(title=&quot;Rat Complaints to NYC&#39;s 311 By Borough: 2010-2017\n&quot;, 
+             caption=&quot;@jblistman. Data source: NYC Open Data 311 Service Requests&quot;) +
+        scale_y_continuous(breaks=c(0,1,2,3), labels= c(&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;)) +
+        geom_vline(xintercept=seq(1,92,by=6), colour=&#39;gray&#39;) + 
+        scale_x_continuous(breaks=seq(1,92,by=6),labels=xlabels) +
+        theme(axis.text.x=element_text(size = 13), 
+              axis.text.y=element_text(size = 13),
+              axis.title.x=element_text (size = 14),
+              axis.title.y=element_text (size = 14),
+              plot.title = element_text(size = 15, hjust = 0.5),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12))
+
+RatCallsByMonthBorough</code></pre>
+<p>Load more packages needed for mapping and to create the gif. You will first have to instal <code>ImageMagick</code> which is wrapped by <code>magick</code> for use in <code>R</code>. It took me a bit of time to figure this out. You might want to start <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html">here</a>.</p>
+<pre class="r"><code>library(gganimate)
+library(choroplethr)
+library(choroplethrZip)
+library(magick)
+library(filesstrings)</code></pre>
+<p>Make dataframe with the subset of variables needed for the map.</p>
+<pre class="r"><code>TidyRatMapData &lt;- TidyRatDataZip[,c(3,4,6,7)]</code></pre>
+<p>Create objects and order variables needed for maps. 1. Month_Year as list in chronologicall order with <code>base::sort</code>. Use <code>base::unique</code> because each zip has an entry for each Month_Year.<br />
+2. Make vector of a color-blind friendly map color palette derived from the <a href="http://colorbrewer2.org/#type=sequential&amp;scheme=YlGnBu&amp;n=9">colorbrewer website</a> for 9 factor levels of “value”.<br />
+3. Make vector of NYC zip codes instead of using nyc_fips because county fips codes include some census zcta (close to zip codes, but not exactly) that include Long Island, which is <em>definitely</em> not part of NYC.</p>
+<pre class="r"><code>datesRats &lt;- sort(unique(TidyRatMapData$Month_Year))
+mapcolors &lt;- c(&#39;#ffffd9&#39;,&#39;#edf8b1&#39;,&#39;#c7e9b4&#39;,&#39;#7fcdbb&#39;,&#39;#41b6c4&#39;,&#39;#1d91c0&#39;,&#39;#225ea8&#39;,&#39;#253494&#39;,&#39;#081d58&#39;)
+nyc_zips &lt;- NYCpopsizebyzip$region</code></pre>
+<p>Make maps using <code>zip_choropleth</code> which uses <code>ggplot2</code> to make map objects and then <code>choroplethr_animate</code> to write map png files.<br />
+These pngs can be used as-is with <code>choroplethr_animate</code> which creates code along with the pngs to make a link to animated maps or they can be turned into a gif with <code>magick</code>.</p>
+<p>For each Month_Year create a map. This code was adapted from a <a href="http://www.kimberlycoffey.com/blog/2015/10/17/animated-choropleth-map-for-the-web">tutorial by Kimberly Coffey</a>.</p>
+<pre class="r"><code>RatMapsAnimate &lt;- list()
+
+for (i in 1:length(datesRats)) {temp.date &lt;- datesRats[i]
+df &lt;- subset(TidyRatMapData, Month_Year == temp.date)
+totalrats &lt;- sum(df$count_calls_Zip)
+title = paste(&quot;Total Rat Reports to NYC&#39;s 311 in&quot;, temp.date, &quot;:&quot;, totalrats)
+RatMapsAnimate[[i]] = zip_choropleth(df, zip_zoom = nyc_zips, title=title, reference_map=FALSE) + 
+        scale_fill_manual(values=mapcolors,drop=FALSE, 
+                          na.translate = TRUE, na.value = &quot;gray&quot;,
+                          name=&quot;Rat Reports to \nNYC&#39;s 311 Per \n10,000 Residents&quot;)+
+        labs(caption=&quot;@jblistman. Data source: NYC Open Data 311 Service Requests&quot;)+
+        scale_colour_manual(values=NA) +              
+        guides(colour=guide_legend(&quot;0&quot;, override.aes=list(colour=&quot;gray&quot;)))
+} </code></pre>
+<p>Use <code>choroplethr_animate</code> to write a png image for each map plus a file with html code to combine pngs as an animation. The animation can be viewed in a browser, but we’ll also turn the pngs into a gif.</p>
+<pre class="r"><code>choroplethr_animate(RatMapsAnimate)</code></pre>
+<p><code>choroplethr_animate</code> creates files with numerical names that are out of order, alphabetically. Rename files choropleth_1.png … choropleth_9.png to choropleth_01.png … choropleth_09.png so when they are automatically turned into a gif with <code>magick</code>, they are ordered alphabetically as well as numerically.</p>
+<p><code>filestrings::nice_file_nums</code> will do this automatically for an entire directory. The current working directory already contains the png files that need to be renamed.</p>
+<pre class="r"><code>nice_file_nums(dir = &quot;.&quot;, pattern = &quot;.png&quot;)</code></pre>
+<p>Convert the .png files to a .gif with <code>ImageMagick</code>. If you’ve moved the .png files, change directory before running the following code. I’ve named the resulting file ratmaps.gif and chose a delay of 40 between frames. Play with the delay depending on your preferences for time between frames and name your own file (or keep ratmaps, whichever). <code>system()</code> executes code as if you’re using the terminal.</p>
+<pre class="r"><code>system(&quot;convert -delay 40 *.png ratmaps.gif&quot;)</code></pre>
+<p>If you don’t want to save all the gigantic .png files, remove them from the directory.</p>
+<pre class="r"><code>file.remove(list.files(pattern=&quot;.png&quot;))</code></pre>

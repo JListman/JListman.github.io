@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Make an Animated Map of Rat Sightings From NYC311 Data</title>
+      <link>/blog/make-an-animated-map-of-rat-sightings-from-nyc311-data/</link>
+      <pubDate>Tue, 20 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/make-an-animated-map-of-rat-sightings-from-nyc311-data/</guid>
+      <description>New York City maintains an open data portal making data from many City agencies publicly available. If you’re looking for a good dataset to use for practicing data manipulation, analysis, or visualization techniques, it is a gold mine. NYC’s 311 system takes calls or online complaints and questions about any non-emergency matter, all of which are available on the NYC Open Data website. NYC 311 has a rodent sighting category and rat sub-category, which I used for this project.</description>
+    </item>
+    
+    <item>
       <title>Scraping The CAWP Site To Make a Shiny App To Search For Women Running For Office</title>
       <link>/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</link>
       <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>

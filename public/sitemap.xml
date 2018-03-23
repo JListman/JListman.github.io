@@ -23,6 +23,11 @@
   </url>
   
   <url>
+    <loc>/blog/make-an-animated-map-of-rat-sightings-from-nyc311-data/</loc>
+    <lastmod>2018-03-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/scraping-the-cawp-site-to-make-a-shiny-app-to-search-for-women-running-for-office/</loc>
     <lastmod>2018-03-15T00:00:00+00:00</lastmod>
   </url>
@@ -38,6 +43,12 @@
   </url>
   
   <url>
+    <loc>/tags/animation/</loc>
+    <lastmod>2018-03-20T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/blog/</loc>
     <lastmod>2018-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -45,6 +56,12 @@
   
   <url>
     <loc>/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/choropleth/</loc>
+    <lastmod>2018-03-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -63,6 +80,18 @@
   <url>
     <loc>/</loc>
     <lastmod>2017-11-13T12:21:16-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/nyc-311/</loc>
+    <lastmod>2018-03-20T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/open-data/</loc>
+    <lastmod>2018-03-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -104,7 +133,7 @@
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
