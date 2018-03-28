@@ -18,12 +18,19 @@ tags:
 <p>You can read my Medium <a href="https://towardsdatascience.com/new-yorkers-should-learn-to-get-along-with-rats-because-theyre-not-leaving-a-data-visualization-db4ca516762b">blog post</a> about rats in NYC and some of the factors that might contribute to seasonal changes and Borough or neighborhood differences in rat 311 reports.</p>
 <p>This post describes the R code used to process, analyse, and visualize the data. <img src="img/ratmaps.gif" /></p>
 <p>Load packages used</p>
+<p>You will also have to instal <code>ImageMagick</code> on your computer (not an R package) which is wrapped by <code>magick</code> for use in <code>R</code>. It took me a bit of time to figure this out. You might want to start <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html">here</a>.</p>
 <pre class="r"><code>library(tidyverse)
-library(data.table)</code></pre>
+library(data.table)
+library(janitor)
+library(ggplot2)
+library(gganimate)
+library(choroplethr)
+library(choroplethrZip)
+library(magick)
+library(filesstrings)</code></pre>
 <p>You can use data stored in my <a href="https://github.com/JListman/NYC_311_animated_map">GitHub repository</a> associated with this project or you can download an updated version of 311 data from NYC Open Data.</p>
-<p>I downloaded <a href="https://data.cityofnewyork.us/Social-Services/Rat-and-Mouse-Sightings/tyjc-9rwy?category=Social-Services&amp;view_name=Rat-and-Mouse-Sightings">NYC 311 data on rat and mouse sightings</a> from January, 2010 through July, 2017 and saved it as <code>Rat_and_Mouse_Sightings.csv</code>.</p>
-<p>This was read into R with <code>data.table::fread</code>, faster than <code>read.csv</code>.</p>
-<p>Variable names were changed to snake case using . Character variables were changed to factors. Rows were selected for Descriptor = “Rat Sighting” to remove mouse sightings from dataframe. “Created_Date” was turned into date format, then month, year and Month_Year variables were extracted in case they’re needed for plotting. This was saved as RatData.csv</p>
+<p>Download <a href="https://data.cityofnewyork.us/Social-Services/Rat-and-Mouse-Sightings/tyjc-9rwy?category=Social-Services&amp;view_name=Rat-and-Mouse-Sightings">NYC 311 data on rat and mouse sightings</a>. I dowloaded data from January, 2010 through July, 2017 and saved it as <code>Rat_and_Mouse_Sightings.csv</code>.</p>
+<p>This was read into R with <code>data.table::fread</code>, which is faster than <code>read.csv</code>.</p>
 <pre class="r"><code>RatMouseSightings &lt;- fread(&quot;Rat_and_Mouse_Sightings.csv&quot;)</code></pre>
 <p>This results in a large data set with many variables not needed for this project.</p>
 <p>Look at the first few rows to understand the variables we have.</p>
@@ -31,7 +38,7 @@ library(data.table)</code></pre>
 <p>Make a smaller dataframe by removing unneeded columns keeping only “Created Date”, “Descriptor”,“Incident Zip”, and “Borough”. Look at the first few rows again to make sure the correct variables were kept.</p>
 <pre class="r"><code>RatMouseData &lt;- as.data.frame(RatMouseSightings[,c(2,7,9,25)])
 View(head(RatMouseData))</code></pre>
-<p>Remove the super large file from memory, since we’re now working with a file that only contains 4 of the original 57 columns (variables).</p>
+<p>Remove the super large file from memory, since we’re now working with a file that only contains 4 of the original 53 columns (variables).</p>
 <pre class="r"><code>rm(RatMouseSightings)</code></pre>
 <p>Fix the variable names to remove spaces using <code>janitor::clean_names</code>. Then turn multiple variables from character to factor, at the same time.</p>
 <pre class="r"><code>RatMouseData &lt;- RatMouseData %&gt;% clean_names()
@@ -78,14 +85,14 @@ table(TidyRatDataZip$value)</code></pre>
 <img src="img/RatCalls.jpg" />
 
 </div>
-<p>First, create a new data frame with Month_Year in proper order for plotting &amp; create a new median variable. I used median number of rat reports per 10,000 residents rather than mean because the distribution was quite skewed.</p>
+<p>First, create a new data frame with Month_Year in proper chronological order for plotting &amp; create a new variable. I used median number of rat reports per 10,000 residents rather than mean because the distribution was quite skewed.</p>
 <pre class="r"><code>RatCallsByBoroughMedian &lt;- RatData %&gt;% 
         count(Incident_Zip, Borough, popsize, Month_Year) %&gt;%
         rename(&quot;count_calls_Zip&quot; = n) %&gt;%
         mutate(ReportPer10K = (count_calls_Zip/popsize)*10000) %&gt;%
         group_by(Borough, Month_Year) %&gt;%
         summarize(MedianMonthYearReportPer10K = median(ReportPer10K))</code></pre>
-<p>Create a dummy variable, “Order”, to make plotting the x-axis easier. “Order” is a number from 1 to 92, which is the number of levels for the factor variable “Month_Year”. Change names of “Order” variable manually for x-axis using only January and July so x-axis is readable instead of crowded and seasonality is visible. The <code>\n</code> within each xlabel makes them print on two lines instead of a single, unreadable line. Again, I downloaded the data in July, 2017. If you do a new download now, instead of using my stored data, you’ll need to deal with Month_Year levels that are not addressed in my code.</p>
+<p>Create a dummy variable, “Order”, to make plotting the x-axis easier. “Order” is a number from 1 to 92, which is the number of levels for the factor variable “Month_Year”. If you download your data from NYC Open Data rather than using my older data set, you’ll have a different number of levels for this variable and will have to adjust the code, accordingly. Change names of “Order” variable manually for x-axis using only January and July so x-axis is readable instead of crowded and seasonality is visible. The <code>\n</code> within each xlabel makes them print on two lines instead of a single, unreadable line. Again, I downloaded the data in July, 2017. If you do a new download now, instead of using my stored data, you’ll need to deal with Month_Year levels that are not addressed in my code.</p>
 <pre class="r"><code>RatCallsByBoroughMedian$Order &lt;- seq_along(1:92) 
 xlabels &lt;- c(&quot;Jan \n2010&quot;,&quot;July \n2010&quot;,&quot;Jan \n2011&quot;,&quot;July \n2011&quot;,&quot;Jan \n2012&quot;,
             &quot;July \n2012&quot;,&quot;Jan \n2013&quot;,&quot;July \n2013&quot;,&quot;Jan \n2014&quot;,&quot;July \n2014&quot;,
@@ -112,23 +119,16 @@ xlabels &lt;- c(&quot;Jan \n2010&quot;,&quot;July \n2010&quot;,&quot;Jan \n2011&
               legend.title = element_text(size = 12))
 
 RatCallsByMonthBorough</code></pre>
-<p>Load more packages needed for mapping and to create the gif. You will first have to instal <code>ImageMagick</code> which is wrapped by <code>magick</code> for use in <code>R</code>. It took me a bit of time to figure this out. You might want to start <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html">here</a>.</p>
-<pre class="r"><code>library(gganimate)
-library(choroplethr)
-library(choroplethrZip)
-library(magick)
-library(filesstrings)</code></pre>
-<p>Make dataframe with the subset of variables needed for the map.</p>
+<p>Make a dataframe with the subset of variables needed for the map.</p>
 <pre class="r"><code>TidyRatMapData &lt;- TidyRatDataZip[,c(3,4,6,7)]</code></pre>
-<p>Create objects and order variables needed for maps. 1. Month_Year as list in chronologicall order with <code>base::sort</code>. Use <code>base::unique</code> because each zip has an entry for each Month_Year.<br />
-2. Make vector of a color-blind friendly map color palette derived from the <a href="http://colorbrewer2.org/#type=sequential&amp;scheme=YlGnBu&amp;n=9">colorbrewer website</a> for 9 factor levels of “value”.<br />
-3. Make vector of NYC zip codes instead of using nyc_fips because county fips codes include some census zcta (close to zip codes, but not exactly) that include Long Island, which is <em>definitely</em> not part of NYC.</p>
+<p>Create objects and order variables needed for maps. 1. Month_Year as list in chronologicall order with <code>base::sort</code>. Combine the sort with <code>base::unique</code> to get rid of duplicate Month_Year levels because each zip has an entry for each Month_Year.<br />
+2. Make vector of Hex color codes in a color-blind friendly map color palette derived from the <a href="http://colorbrewer2.org/#type=sequential&amp;scheme=YlGnBu&amp;n=9">colorbrewer website</a> for 9 factor levels of “value”. I chose a diverging palette to emphasize the highs and lows. You can play around with this. 3. Make a vector of NYC zip codes instead of using nyc_fips (in the Census data set that we merged earlier to get population size) because county fips codes include some census zcta (close to zip codes, but not exactly) that include Long Island, which is <em>definitely</em> not part of NYC.</p>
 <pre class="r"><code>datesRats &lt;- sort(unique(TidyRatMapData$Month_Year))
 mapcolors &lt;- c(&#39;#ffffd9&#39;,&#39;#edf8b1&#39;,&#39;#c7e9b4&#39;,&#39;#7fcdbb&#39;,&#39;#41b6c4&#39;,&#39;#1d91c0&#39;,&#39;#225ea8&#39;,&#39;#253494&#39;,&#39;#081d58&#39;)
 nyc_zips &lt;- NYCpopsizebyzip$region</code></pre>
-<p>Make maps using <code>zip_choropleth</code> which uses <code>ggplot2</code> to make map objects and then <code>choroplethr_animate</code> to write map png files.<br />
+<p>Make maps using <code>zip_choropleth</code> which uses <code>ggplot2</code> to make map objects and then <code>choroplethr_animate</code> to write png files of each map image.<br />
 These pngs can be used as-is with <code>choroplethr_animate</code> which creates code along with the pngs to make a link to animated maps or they can be turned into a gif with <code>magick</code>.</p>
-<p>For each Month_Year create a map. This code was adapted from a <a href="http://www.kimberlycoffey.com/blog/2015/10/17/animated-choropleth-map-for-the-web">tutorial by Kimberly Coffey</a>.</p>
+<p>For each Month_Year create a map. This code was adapted from a <a href="http://www.kimberlycoffey.com/blog/2015/10/17/animated-choropleth-map-for-the-web">tutorial by Kimberly Coffey</a>. In <code>scale_fill_manual</code> and <code>guides</code>, override the vector of color codes that correspond to binned values so that zip codes with no rat complaints for a given month are colored gray.</p>
 <pre class="r"><code>RatMapsAnimate &lt;- list()
 
 for (i in 1:length(datesRats)) {temp.date &lt;- datesRats[i]
@@ -148,7 +148,7 @@ RatMapsAnimate[[i]] = zip_choropleth(df, zip_zoom = nyc_zips, title=title, refer
 <p><code>choroplethr_animate</code> creates files with numerical names that are out of order, alphabetically. Rename files choropleth_1.png … choropleth_9.png to choropleth_01.png … choropleth_09.png so when they are automatically turned into a gif with <code>magick</code>, they are ordered alphabetically as well as numerically.</p>
 <p><code>filestrings::nice_file_nums</code> will do this automatically for an entire directory. The current working directory already contains the png files that need to be renamed.</p>
 <pre class="r"><code>nice_file_nums(dir = &quot;.&quot;, pattern = &quot;.png&quot;)</code></pre>
-<p>Convert the .png files to a .gif with <code>ImageMagick</code>. If you’ve moved the .png files, change directory before running the following code. I’ve named the resulting file ratmaps.gif and chose a delay of 40 between frames. Play with the delay depending on your preferences for time between frames and name your own file (or keep ratmaps, whichever). <code>system()</code> executes code as if you’re using the terminal.</p>
+<p>Convert the .png files to a .gif with <code>ImageMagick</code>. First, change your working directory to the folder in which you’ve written the png files. I’ve named the resulting file ratmaps.gif and chose a delay of 40 between frames. Play with the delay depending on your preferences for time between frames and name your own file (or keep ratmaps, whichever). <code>system()</code> executes code as if you’re using the terminal.</p>
 <pre class="r"><code>system(&quot;convert -delay 40 *.png ratmaps.gif&quot;)</code></pre>
-<p>If you don’t want to save all the gigantic .png files, remove them from the directory.</p>
+<p>If you don’t want to save all the gigantic .png files, remove them from the working directory.</p>
 <pre class="r"><code>file.remove(list.files(pattern=&quot;.png&quot;))</code></pre>
