@@ -14,7 +14,7 @@ publishDir = "public"
     firstname           = "Jenny Listman"                # First name shows in introduction on main page
     tagline             = "Data Science Consultant for Small Businesses & Nonprofits"       # Appears after the introduction
     introheight         = "medium"                       # Input either 'medium' or 'large' or 'fullheight'
-    themestyle          = "dark"                        # Choose 'light' or 'dark'
+    themestyle          = "light"                        # Choose 'light' or 'dark'
     avatar              = "img/profile.jpg"             # Path to image in static folder eg. img/avatar.png, or comment out to remove
     email               = "jenny.listman@nyu.edu"         # Shows in contact section, or leave blank to omit
     localtime           = true                          # Show your current local time in contact section
@@ -55,9 +55,6 @@ publishDir = "public"
       async = true
       defer = true
       
-[[params.customCSS]]
-     href = "css/custom.css"
-     
 # Social icons appear in introduction and contact section. Add as many more as you like.
 # Find icon names here: http://fontawesome.io/cheatsheet/
 
