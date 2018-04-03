@@ -14,16 +14,9 @@ tags:
 
 
 
-<div id="by-jenny-listman" class="section level4">
-<h4>By <a href="/">Jenny Listman</a></h4>
-<div id="this-post-describes-r-code-to-process-analyse-and-visualize-data-from-nycs-311-database." class="section level5">
-<h5>This post describes R code to process, analyse, and visualize data from NYC’s 311 database.</h5>
 <p>New York City maintains an <a href="https://opendata.cityofnewyork.us">open data portal</a> making data from many City agencies publicly available. If you’re looking for a good dataset to use for practicing data manipulation, analysis, or visualization techniques, it is a gold mine. NYC’s 311 system takes calls or online complaints and questions about any non-emergency matter, all of which are available on the NYC Open Data website. NYC 311 has a rodent sighting category and rat sub-category, which I used for this project.</p>
 <p>You can read my Medium <a href="https://towardsdatascience.com/new-yorkers-should-learn-to-get-along-with-rats-because-theyre-not-leaving-a-data-visualization-db4ca516762b">blog post</a> about rats in NYC and some of the factors that might contribute to seasonal changes and Borough or neighborhood differences in rat 311 reports.</p>
-<div class="figure">
-<img src="img/ratmaps.gif" />
-
-</div>
+<p>This post describes the R code used to process, analyse, and visualize the data. <img src="img/ratmaps.gif" /></p>
 <p>Load packages used</p>
 <p>You will also have to instal <code>ImageMagick</code> on your computer (not an R package) which is wrapped by <code>magick</code> for use in <code>R</code>. It took me a bit of time to figure this out. You might want to start <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html">here</a>.</p>
 <pre class="r"><code>library(tidyverse)
@@ -48,17 +41,19 @@ View(head(RatMouseData))</code></pre>
 <p>Remove the super large file from memory, since we’re now working with a file that only contains 4 of the original 53 columns (variables).</p>
 <pre class="r"><code>rm(RatMouseSightings)</code></pre>
 <p>Fix the variable names to remove spaces using <code>janitor::clean_names</code>. Then turn multiple variables from character to factor, at the same time.</p>
-<pre class="r"><code>cols &lt;- c(&quot;Descriptor&quot;, &quot;Incident_Zip&quot;, &quot;Borough&quot;)
+<pre class="r"><code>RatMouseData &lt;- RatMouseData %&gt;% clean_names()
 
-RatMouseData &lt;- RatMouseData %&gt;% 
-        clean_names() %&gt;% 
-        mutate_at(cols, funs(factor(.))) </code></pre>
-<p>Make a new dataframe that includes only the subset of rows for which Descriptor variable is “Rat Sighting”. Turn “Created_Date” variable, currently a string, into POSIXct date format. Then get Month, Year and Month_Year variables because you might want any/all of those for exploratory analysis or plotting. Create them as factor variables instead of numeric or character. Save the dataframe of rat sighting data as a <code>.rds</code> file to preserve variable formatting for the next time you want to use it.</p>
-<pre class="r"><code>RatData &lt;- subset(RatMouseData, Descriptor == &quot;Rat Sighting&quot;) %&gt;% 
-        mutate(Created_Date = as.POSIXct(Created_Date, &quot;%m/%d/%Y %I:%M:%S %p&quot;, tz=&quot;&quot;)) %&gt;%
-        mutate(Year = as.factor(year(RatData$Created_Date))) %&gt;%
-        mutate(Month = as.factor(month(RatData$Created_Date))) %&gt;%
-        mutate(Month_Year = as.factor(format(RatData$Created_Date, &quot;%Y-%m&quot;)))
+cols &lt;- c(&quot;Descriptor&quot;, &quot;Incident_Zip&quot;, &quot;Borough&quot;)
+
+RatMouseData &lt;- RatMouseData %&gt;% mutate_at(cols, funs(factor(.)))</code></pre>
+<p>Make a new dataframe with the subset of rows for which Descriptor variable is “Rat Sighting”.</p>
+<pre class="r"><code>RatData &lt;- subset(RatMouseData, Descriptor == &quot;Rat Sighting&quot;)</code></pre>
+<p>Turn “Created_Date” variable, currently a string, into POSIXct date format. Then get Month, Year and Month_Year variables because you might want any/all of those for exploratory analysis or plotting. Create them as factor variables instead of numeric or character. Save the dataframe of rat sighting data as a <code>.rds</code> file to preserve variable formatting for the next time you want to use it.</p>
+<pre class="r"><code>RatData &lt;- RatData %&gt;% 
+mutate(Created_Date = as.POSIXct(Created_Date, &quot;%m/%d/%Y %I:%M:%S %p&quot;, tz=&quot;&quot;)) %&gt;%
+mutate(Year = as.factor(year(RatData$Created_Date))) %&gt;%
+mutate(Month = as.factor(month(RatData$Created_Date))) %&gt;%
+mutate(Month_Year = as.factor(format(RatData$Created_Date, &quot;%Y-%m&quot;)))
 
 saveRDS(RatData, &quot;RatData.rds&quot;)</code></pre>
 <p>Read in census data NYCpopsizebyzip.csv (found in my <a href="https://github.com/JListman/NYC_311_animated_map">GitHub repository</a> associated with this project) for popoulation size by NYC zip code. Add population count (<code>NYCpopsizebyzip$value</code>) to <code>RatData</code> by matching zip codes. <code>region</code> variable in <code>NYCpopsizebyzip</code> must be changed from numeric to factor in order to use <code>base::merge</code>. Use <code>droplevels</code> to remove <code>Incident_Zip</code> and <code>Borough</code> typos, NAs, or errors from NYC 311 database. Rename <code>value</code> (population count variable from <code>NYCpopsizebyzip</code>) to be self-explanatory.</p>
@@ -68,7 +63,7 @@ NYCpopsizebyzip$region &lt;- as.factor(NYCpopsizebyzip$region)
 
 RatData &lt;- RatData %&gt;%
         merge(NYCpopsizebyzip, by.x=&quot;Incident_Zip&quot;, by.y=&quot;region&quot;) %&gt;%
-        rename(&quot;popsize&quot; = value) %&gt;%
+         rename(&quot;popsize&quot; = value) %&gt;%
         droplevels()</code></pre>
 <p>Make a tidy Zip dataframe including new variable of calls per Month_Year by zip code with <code>dplyr::count</code>. Rename the newly created variable (automatically named <code>n</code> by <code>dplyr::count</code> default) to be self-explanatory.</p>
 <pre class="r"><code>TidyRatDataZip &lt;- RatData %&gt;% 
@@ -157,5 +152,3 @@ RatMapsAnimate[[i]] = zip_choropleth(df, zip_zoom = nyc_zips, title=title, refer
 <pre class="r"><code>system(&quot;convert -delay 40 *.png ratmaps.gif&quot;)</code></pre>
 <p>If you don’t want to save all the gigantic .png files, remove them from the working directory.</p>
 <pre class="r"><code>file.remove(list.files(pattern=&quot;.png&quot;))</code></pre>
-</div>
-</div>
