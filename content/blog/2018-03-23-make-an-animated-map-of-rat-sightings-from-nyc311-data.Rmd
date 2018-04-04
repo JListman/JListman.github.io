@@ -17,6 +17,9 @@ tags:
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 knitr::opts_chunk$set(fig.width=11, fig.height=5) 
 ```
+####By [Jenny Listman](/)
+#####Analyze NYC 311 Open Data and Make an Animated Choropleth Map
+
 New York City maintains an [open data portal](https://opendata.cityofnewyork.us) making data from many City agencies publicly available. If you're looking for a good dataset to use for practicing data manipulation, analysis, or visualization techniques, it is a gold mine. 
 NYC’s 311 system takes calls or online complaints and questions about any non-emergency matter, all of which are available on the NYC Open Data website. NYC 311 has a rodent sighting category and rat sub-category, which I used for this project.
 

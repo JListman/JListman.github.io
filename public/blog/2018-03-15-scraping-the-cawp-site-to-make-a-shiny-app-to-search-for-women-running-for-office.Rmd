@@ -14,7 +14,9 @@ output:
         theme: united
         highlight: tango
 ---
-####Interactive App To Visualize Women Runnning for State or Federal Offices
+####By [Jenny Listman](/)
+#####An Interactive App To Visualize Women Runnning for State or Federal Offices
+ 
 ![](img/CAWPmap.jpg)
 This project was created with data scraped from the website of the [Center for American Women in Politics](http://www.cawp.rutgers.edu) at [Rutgers University](https://www.rutgers.edu). The Center conducts research on women's participation in politics in America and maintains [a list](http://cawp.rutgers.edu/buzz-2018-potential-women-candidates-us-congress-and-statewide-elected-executive) of women who are or potentially will be running for US Congress and State offices.
 

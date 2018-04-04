@@ -14,6 +14,10 @@ tags:
 
 
 
+<div id="by-jenny-listman" class="section level4">
+<h4>By <a href="/">Jenny Listman</a></h4>
+<div id="analyze-nyc-311-open-data-and-make-an-animated-choropleth-map" class="section level5">
+<h5>Analyze NYC 311 Open Data and Make an Animated Choropleth Map</h5>
 <p>New York City maintains an <a href="https://opendata.cityofnewyork.us">open data portal</a> making data from many City agencies publicly available. If you’re looking for a good dataset to use for practicing data manipulation, analysis, or visualization techniques, it is a gold mine. NYC’s 311 system takes calls or online complaints and questions about any non-emergency matter, all of which are available on the NYC Open Data website. NYC 311 has a rodent sighting category and rat sub-category, which I used for this project.</p>
 <p>You can read my Medium <a href="https://towardsdatascience.com/new-yorkers-should-learn-to-get-along-with-rats-because-theyre-not-leaving-a-data-visualization-db4ca516762b">blog post</a> about rats in NYC and some of the factors that might contribute to seasonal changes and Borough or neighborhood differences in rat 311 reports.</p>
 <p>This post describes the R code used to process, analyse, and visualize the data. <img src="img/ratmaps.gif" /></p>
@@ -152,3 +156,5 @@ RatMapsAnimate[[i]] = zip_choropleth(df, zip_zoom = nyc_zips, title=title, refer
 <pre class="r"><code>system(&quot;convert -delay 40 *.png ratmaps.gif&quot;)</code></pre>
 <p>If you don’t want to save all the gigantic .png files, remove them from the working directory.</p>
 <pre class="r"><code>file.remove(list.files(pattern=&quot;.png&quot;))</code></pre>
+</div>
+</div>
