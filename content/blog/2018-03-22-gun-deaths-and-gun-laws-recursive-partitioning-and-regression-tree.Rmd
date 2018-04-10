@@ -231,24 +231,31 @@ plot(lawsubcategories_model_opt)
 text(lawsubcategories_model_opt, use.n=TRUE, all=TRUE, cex = 0.5)
 ```
 
-I need to translate the z-scored values back to the original values they represent in order to make an infographic. The options in `rpart` `visNetwork` and `networkD3` didn't produce the exact tree that I wanted or didn't have the editing options I was looking for. Re-run lines 142 - 243 of the code above to create the same dataset but without z-scores. Then create a decoder dataframe that lists z-sores and original values. Use `list.save` from the `rlist` package to save the output to a file.
+I need to translate the z-scored values back to the original values they represent in order to make an infographic. The options in `rpart` `visNetwork` and `networkD3` didn't produce the exact tree that I wanted or didn't have the editing options I was looking for; the z-scores are now completely separated from original values, but z-scores don't tell us anything useful at this point.
+
+I saved the z-scored version of the test set with another name: `z_scored_test_data`. I sometimes make long-ish variable names to dummy-proof things for myself. Create a version of the test dataset without z-scores. Combine this with the z-scored data using `cbind` and sort by variable name using `order` so z-scored & original versions of each variable are adjacent.
+
+Then create a decoder that is a list of dataframes, one dataframe for each law subcategory. Each dataframe in the list contains one column of z-sores and one column of original values (total count of laws in a given subcategory) for each law subcategory. Use `list.save` from the `rlist` package to save the output to a file. A copy of the decoder, `zscore_decoder.rds`, can be found in the data file of the associated [GitHub repository](https://github.com/JListman/FirearmDeathRate).
 
 ```{r, results = 'hide', message=FALSE, eval = FALSE}
 
 z_scored_test_data <- ml_lawsubcategories_test
 
-names <- names(cbind(ml_lawsubcategories_test, z_scored_test_data))
+no_z_scores <- gunlawsevensplit[,c(1:2,137:186)] %>% 
+        subset(year %in% c(2000,2002,2004,2006,2008,2010,2012,2014,2016)) %>%
+         .[,-c(1,2)]
 
-z_score_codes <- cbind(ml_lawsubcategories_test, z_scored_test_data) %>%
-       .[ , order(names)] %>%
-        .[,c(25,96,1:24,26:95,97:100)]
+names <- names(cbind(no_z_scores, z_scored_test_data))
 
-names2 <- names(z_score_codes[,-c(1,2)])
+z_score_codes <- cbind(no_z_scores, z_scored_test_data) %>%
+        .[ , order(names)] %>%
+        .[,-c(25,26)]  
+
+names2 <- names(z_score_codes)
 
 z_score_codes <- z_score_codes %>%
         mutate_each_(funs(as.character(.)), names2) %>%
-        mutate_each_(funs(as.factor(.)), names2) %>%
-        .[,-c(1,2)]
+        mutate_each_(funs(as.factor(.)), names2)
 
 decoder <- list()
 j = 1
@@ -260,7 +267,6 @@ k = k+2
 }
 
 list.save(decoder, "zscore_decoder.rds")
-
 ```
 
 
